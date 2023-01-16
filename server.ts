@@ -1,15 +1,17 @@
 import express, { Express, Request, Response } from "express";
-import errorHandlerMiddleware from "../middleware/error-handler";
-import notFoundMiddleware from "../middleware/not-found";
-import connection from "./database";
+import errorHandlerMiddleware from "./src/middleware/error-handler";
+import notFoundMiddleware from "./src/middleware/not-found";
+import { getUsers } from "./src/controllers/user.contoller";
+import * as MySQLConnector from "./src/database";
 const app: Express = express();
-
-//middleware
 
 app.get("/", (req: Request, res: Response) => {
   res.send("hello");
 });
 
+app.get("/get/users", getUsers);
+
+//middleware
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
@@ -21,7 +23,8 @@ app.listen(port, () => {
 
 const start = async () => {
   try {
-    await connection;
+    // connection;
+    MySQLConnector.db();
   } catch (error) {
     console.log(error);
   }
