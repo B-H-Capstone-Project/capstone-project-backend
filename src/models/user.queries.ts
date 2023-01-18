@@ -1,3 +1,3 @@
 export const UserQueries = {
-  GetUsers: `SELECT * FROM USER`,
+  GetUsers: `SELECT * FROM user`,
 };
