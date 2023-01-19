@@ -21,6 +21,7 @@ app.get("/users", getUsers);
 // Delete User
 app.delete("/user/:id", deleteUsers);
 
+
 //middleware
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
