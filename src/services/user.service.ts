@@ -5,5 +5,8 @@ import { execute } from "../database";
 export const getUser = () => {
   return execute<User[]>(UserQueries.GetUsers, []);
 };
+export const deleteUser = (userId:any) => {
+  return execute(UserQueries.DeleteUser, [userId]);
+};
 
-export default { getUser };
+export default { getUser, deleteUser };
