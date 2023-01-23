@@ -1,11 +1,12 @@
 import { Address } from './address';
 export interface User {
+    id: string;
     email: string;
-    is_active: boolean;
+    password: string;
     first_name: string;
     last_name: string;
     phone_number: number;
     address: Address[];
-    password: string;
     role: number;
+    is_active: boolean;
 }
