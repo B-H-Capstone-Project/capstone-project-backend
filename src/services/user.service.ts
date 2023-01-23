@@ -1,6 +1,7 @@
 import { UserQueries } from "../models/user.queries";
 import { User } from "../types/user";
 import { execute } from "../database";
+import { assert } from "console";
 
 export const getUser = () => {
   return execute<User[]>(UserQueries.GetUsers, []);
@@ -22,4 +23,8 @@ export const createUser = (values:any) => {
   return execute(UserQueries.CreateUser, [values]);
 };
 
-export default { getUser, getUserById, deleteUser, createAddress, createUser };
+export const updateUser = (values:any, userId:any) => {
+  return execute(UserQueries.UpdateUser, [...values, userId]);
+};
+
+export default { getUser, getUserById, deleteUser, createAddress, createUser, updateUser };

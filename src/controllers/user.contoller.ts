@@ -1,9 +1,9 @@
 // import { db } from "./database"
 import { Request, RequestHandler, Response } from "express";
-import { getUser, getUserById, deleteUser, createAddress, createUser } from "../services/user.service";
+import { getUser, getUserById, deleteUser, createAddress, createUser, updateUser } from "../services/user.service";
 
 //static
-const addressId:any = "";
+const addressId: any = "";
 
 export const getUsers: RequestHandler = async (req: Request, res: Response) => {
   try {
@@ -42,7 +42,7 @@ export const getUsersById: RequestHandler = async (req: Request, res: Response) 
   }
 };
 
-export const deleteUsers: RequestHandler = async ( req: Request, res: Response) => {
+export const deleteUsers: RequestHandler = async (req: Request, res: Response) => {
   try {
     const userId = req.params.id;
     const users = await deleteUser(userId);
@@ -61,7 +61,7 @@ export const deleteUsers: RequestHandler = async ( req: Request, res: Response) 
   }
 };
 
-export const createAddresses: RequestHandler = async ( req: Request, res: Response) => {
+export const createAddresses: RequestHandler = async (req: Request, res: Response) => {
   try {
     const values = [
       req.body.unit_number,
@@ -72,9 +72,6 @@ export const createAddresses: RequestHandler = async ( req: Request, res: Respon
       req.body.country,
     ]
     const address = await createAddress(values);
-
-
-
     res.status(200).json({
       address,
     });
@@ -89,7 +86,7 @@ export const createAddresses: RequestHandler = async ( req: Request, res: Respon
   }
 };
 
-export const createUsers: RequestHandler = async ( req: Request, res: Response) => {
+export const createUsers: RequestHandler = async (req: Request, res: Response) => {
   try {
     const values = [
       req.body.email,
@@ -114,3 +111,35 @@ export const createUsers: RequestHandler = async ( req: Request, res: Response) 
   }
 };
 
+
+export const updateUsers: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    const userId = req.params.id;
+
+    const values = [
+      req.body.email,
+      req.body.password,
+      req.body.first_name,
+      req.body.last_name,
+      req.body.phone_number,
+      req.body.address_id,
+
+    ]
+    const update = await updateUser(values, userId);
+
+    //used to see if user was updated.
+    const userUpdated = await getUserById(values[0]);
+    res.status(200).json({
+      update,
+      userUpdated,
+    });
+  } catch (error) {
+    console.error(
+      "[teams.controller][getTeams][Error] ",
+      typeof error === "object" ? JSON.stringify(error) : error
+    );
+    res.status(500).json({
+      message: "There was an error when fetching teams",
+    });
+  }
+};

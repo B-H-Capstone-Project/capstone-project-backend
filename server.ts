@@ -3,7 +3,7 @@ import cors from "cors";
 
 import errorHandlerMiddleware from "./src/middleware/error-handler";
 import notFoundMiddleware from "./src/middleware/not-found";
-import { getUsers, getUsersById, deleteUsers, createAddresses, createUsers } from "./src/controllers/user.contoller";
+import { getUsers, getUsersById, deleteUsers, createAddresses, createUsers, updateUsers } from "./src/controllers/user.contoller";
 import * as MySQLConnector from "./src/database";
 const app: Express = express();
 
@@ -30,12 +30,15 @@ app.post("/address", createAddresses)
 // Create User
 app.post("/user", createUsers)
 
+//Update user by id
+app.put("/user/:id", updateUsers)
 
 //middleware
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8080;
+// const port = 8080;
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
