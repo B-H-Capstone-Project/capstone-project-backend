@@ -3,7 +3,8 @@ import cors from "cors";
 
 import errorHandlerMiddleware from "./src/middleware/error-handler";
 import notFoundMiddleware from "./src/middleware/not-found";
-import { getUsers, getUsersById, deleteUsers, createAddresses, createUsers, updateUsers } from "./src/controllers/user.contoller";
+import { getUsers, getUsersById, deleteUsers, createUsers, updateUsers } from "./src/controllers/user.contoller";
+import {createAddresses} from "./src/controllers/address.controller";
 import * as MySQLConnector from "./src/database";
 const app: Express = express();
 
