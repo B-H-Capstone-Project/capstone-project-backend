@@ -15,8 +15,16 @@ export const deleteUser = (userId:any) => {
   return execute(UserQueries.DeleteUser, [userId]);
 };
 
+export const createAddress = (values:any) => {
+  return execute(UserQueries.CreateAddress, [values]);
+};
+
+export const createUser = (values:any) => {
+  return execute(UserQueries.CreateUser, [values]);
+};
+
 export const updateUser = (values:any, userId:any) => {
   return execute(UserQueries.UpdateUser, [...values, userId]);
 };
 
-export default { getUser, getUserById, deleteUser, updateUser };
+export default { getUser, getUserById, deleteUser, createAddress, createUser, updateUser };
