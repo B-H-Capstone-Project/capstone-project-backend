@@ -4,6 +4,7 @@ import cors from "cors";
 import errorHandlerMiddleware from "./src/middleware/error-handler";
 import notFoundMiddleware from "./src/middleware/not-found";
 import { getUsers, getUsersById, deleteUsers, createUsers, updateUsers } from "./src/controllers/user.contoller";
+import {createAddresses, deleteAddresses, updateAddresses, getAddressesById} from "./src/controllers/address.controller";
 import * as MySQLConnector from "./src/database";
 const app: Express = express();
 
@@ -32,6 +33,15 @@ app.post("/user", createUsers)
 
 //Update user by id
 app.put("/user/:id", updateUsers)
+
+//Update address by id
+app.put("/address/:id", updateAddresses)
+
+//Delete addresses by id
+app.delete("/address/:id", deleteAddresses)
+
+//Get Address By Id
+app.get("/address/:id", getAddressesById)
 
 //middleware
 app.use(notFoundMiddleware);
