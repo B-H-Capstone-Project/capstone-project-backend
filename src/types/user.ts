@@ -6,7 +6,7 @@ export interface User {
     first_name: string;
     last_name: string;
     phone_number: number;
-    address: Address[];
+    address_id: Address[];
     role: number;
     is_active: boolean;
 }

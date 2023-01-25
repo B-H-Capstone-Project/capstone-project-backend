@@ -1,8 +1,9 @@
 import { AddressQueries } from "../models/address.queries";
 import { execute } from "../database";
+import { Address } from "../types/address";
 
-export const createAddress = (values:any) => {
-    return execute(AddressQueries.CreateAddress, [values]);
+export const createAddress = (addValues:any) => {
+    return execute<Address>(AddressQueries.CreateAddress, [addValues]);
   };
 
   export const deleteAddress = (addressId:any) => {

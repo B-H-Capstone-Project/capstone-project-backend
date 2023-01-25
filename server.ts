@@ -25,10 +25,10 @@ app.get("/user/:id", getUsersById);
 // Delete User by Id
 app.delete("/user/:id", deleteUsers);
 
-// Create Address
-app.post("/address", createAddresses)
+// // Create Address
+// app.post("/address", createAddresses)
 
-// Create User
+// Create User with Address
 app.post("/user", createUsers)
 
 //Update user by id
@@ -48,7 +48,6 @@ app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
 const port = process.env.PORT || 8080;
-// const port = 8080;
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

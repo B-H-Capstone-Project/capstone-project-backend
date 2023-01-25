@@ -1,4 +1,3 @@
-// import { db } from "./database"
 import { Request, RequestHandler, Response } from "express";
 import { createAddress, deleteAddress, getAddressById, updateAddress } from "../services/address.service";
 
