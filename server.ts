@@ -3,9 +3,16 @@ import cors from "cors";
 
 import errorHandlerMiddleware from "./src/middleware/error-handler";
 import notFoundMiddleware from "./src/middleware/not-found";
-import { getUsers, getUsersById, deleteUsers, createUsers, updateUsers } from "./src/controllers/user.contoller";
-import {createAddresses} from "./src/controllers/address.controller";
+import {
+  getUsers,
+  getUsersById,
+  deleteUsers,
+  createUsers,
+  updateUsers,
+} from "./src/controllers/user.contoller";
+import { createAddresses } from "./src/controllers/address.controller";
 import * as MySQLConnector from "./src/database";
+import { signin } from "./src/auth/auth";
 const app: Express = express();
 
 app.use(express.json());
@@ -26,13 +33,16 @@ app.get("/user/:id", getUsersById);
 app.delete("/user/:id", deleteUsers);
 
 // Create Address
-app.post("/address", createAddresses)
+app.post("/address", createAddresses);
 
 // Create User
-app.post("/user", createUsers)
+app.post("/user", createUsers);
 
 //Update user by id
-app.put("/user/:id", updateUsers)
+app.put("/user/:id", updateUsers);
+
+//signin
+app.post("/auth/signin", signin);
 
 //middleware
 app.use(notFoundMiddleware);
