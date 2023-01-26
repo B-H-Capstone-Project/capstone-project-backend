@@ -110,8 +110,8 @@ export const updateUsers: RequestHandler = async (req: Request, res: Response) =
       req.body.last_name,
       req.body.phone_number,
       req.body.address_id,
-
     ]
+    
     const update = await updateUser(values, userId);
 
     //used to see if user was updated.
