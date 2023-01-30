@@ -12,7 +12,8 @@ import {
 } from "./src/controllers/user.contoller";
 import { createAddresses } from "./src/controllers/address.controller";
 import * as MySQLConnector from "./src/database";
-import { signin } from "./src/auth/auth";
+import authRouter from "./src/router/auth";
+import { signin } from "./src/controllers/auth.controller";
 const app: Express = express();
 
 app.use(express.json());
@@ -42,7 +43,7 @@ app.post("/user", createUsers);
 app.put("/user/:id", updateUsers);
 
 //signin
-app.post("/auth/signin", signin);
+app.use("/auth", authRouter);
 
 //middleware
 app.use(notFoundMiddleware);
