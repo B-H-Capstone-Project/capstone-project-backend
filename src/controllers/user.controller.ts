@@ -1,6 +1,6 @@
 import { Request, RequestHandler, Response } from "express";
 import { getUser, getUserById, deleteUser, createUser, updateUser } from "../services/user.service";
-import { createAddress } from './../services/address.service';
+import { createAddress } from '../services/address.service';
 
 
 export const getUsers: RequestHandler = async (req: Request, res: Response) => {
