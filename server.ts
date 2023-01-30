@@ -3,10 +3,29 @@ import cors from "cors";
 
 import errorHandlerMiddleware from "./src/middleware/error-handler";
 import notFoundMiddleware from "./src/middleware/not-found";
-import { getUsers, getUsersById, deleteUsers, createUsers, updateUsers } from "./src/controllers/user.contoller";
-import {createAddresses, deleteAddresses, updateAddresses, getAddressesById} from "./src/controllers/address.controller";
-import {createReservations, deleteReservations, updateReservations, getReservationsById, getReservationsByUsers} from "./src/controllers/reservation.controller";
+import {
+  getUsers,
+  getUsersById,
+  deleteUsers,
+  createUsers,
+  updateUsers,
+} from "./src/controllers/user.contoller";
+import {
+  createAddresses,
+  deleteAddresses,
+  updateAddresses,
+  getAddressesById,
+} from "./src/controllers/address.controller";
+import {
+  createReservations,
+  deleteReservations,
+  updateReservations,
+  getReservationsById,
+  getReservationsByUsers,
+} from "./src/controllers/reservation.controller";
 import * as MySQLConnector from "./src/database";
+import authRouter from "./src/router/auth";
+import { signin } from "./src/controllers/auth.controller";
 const app: Express = express();
 
 app.use(express.json());
@@ -27,37 +46,40 @@ app.get("/user/:id", getUsersById);
 app.delete("/user/:id", deleteUsers);
 
 // // Create Address
-// app.post("/address", createAddresses)
+app.post("/address", createAddresses);
 
 // Create User with Address
-app.post("/user", createUsers)
+app.post("/user", createUsers);
 
 //Update user by id
-app.put("/user/:id", updateUsers)
+app.put("/user/:id", updateUsers);
+
+//signin
+app.use("/auth", authRouter);
 
 //Update address by id
-app.put("/address/:id", updateAddresses)
+app.put("/address/:id", updateAddresses);
 
 //Delete addresses by id
-app.delete("/address/:id", deleteAddresses)
+app.delete("/address/:id", deleteAddresses);
 
 //Get Address By Id
-app.get("/address/:id", getAddressesById)
+app.get("/address/:id", getAddressesById);
 
 //Update reservation by id
-app.put("/reservation/:id", updateReservations)
+app.put("/reservation/:id", updateReservations);
 
 //Delete reservation by id
-app.delete("/reservation/:id", deleteReservations)
+app.delete("/reservation/:id", deleteReservations);
 
 //Get reservation By Id
-app.get("/reservation/:id", getReservationsById)
+app.get("/reservation/:id", getReservationsById);
 
 //Get reservation By User
-app.get("/reservation/user/:user_id", getReservationsByUsers)
+app.get("/reservation/user/:user_id", getReservationsByUsers);
 
 // Create reservation
-app.post("/reservation", createReservations)
+app.post("/reservation", createReservations);
 
 //middleware
 app.use(notFoundMiddleware);
