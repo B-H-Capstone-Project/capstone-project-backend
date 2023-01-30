@@ -1,5 +1,3 @@
-import { User } from './user'
-import { Address } from './address'
 export interface Reservation {
     id: string;
     user_id: number;
