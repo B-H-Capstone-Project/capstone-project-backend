@@ -10,7 +10,19 @@ import {
   createUsers,
   updateUsers,
 } from "./src/controllers/user.contoller";
-import { createAddresses } from "./src/controllers/address.controller";
+import {
+  createAddresses,
+  deleteAddresses,
+  updateAddresses,
+  getAddressesById,
+} from "./src/controllers/address.controller";
+import {
+  createReservations,
+  deleteReservations,
+  updateReservations,
+  getReservationsById,
+  getReservationsByUsers,
+} from "./src/controllers/reservation.controller";
 import * as MySQLConnector from "./src/database";
 import authRouter from "./src/router/auth";
 import { signin } from "./src/controllers/auth.controller";
@@ -33,10 +45,10 @@ app.get("/user/:id", getUsersById);
 // Delete User by Id
 app.delete("/user/:id", deleteUsers);
 
-// Create Address
+// // Create Address
 app.post("/address", createAddresses);
 
-// Create User
+// Create User with Address
 app.post("/user", createUsers);
 
 //Update user by id
@@ -45,12 +57,35 @@ app.put("/user/:id", updateUsers);
 //signin
 app.use("/auth", authRouter);
 
+//Update address by id
+app.put("/address/:id", updateAddresses);
+
+//Delete addresses by id
+app.delete("/address/:id", deleteAddresses);
+
+//Get Address By Id
+app.get("/address/:id", getAddressesById);
+
+//Update reservation by id
+app.put("/reservation/:id", updateReservations);
+
+//Delete reservation by id
+app.delete("/reservation/:id", deleteReservations);
+
+//Get reservation By Id
+app.get("/reservation/:id", getReservationsById);
+
+//Get reservation By User
+app.get("/reservation/user/:user_id", getReservationsByUsers);
+
+// Create reservation
+app.post("/reservation", createReservations);
+
 //middleware
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
 const port = process.env.PORT || 8080;
-// const port = 8080;
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

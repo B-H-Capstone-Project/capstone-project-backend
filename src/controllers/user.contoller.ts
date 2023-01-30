@@ -1,8 +1,7 @@
 import { Request, RequestHandler, Response } from "express";
 import { getUser, getUserById, deleteUser, createUser, updateUser } from "../services/user.service";
+import { createAddress } from './../services/address.service';
 
-//static
-const addressId: any = "";
 
 export const getUsers: RequestHandler = async (req: Request, res: Response) => {
   try {
@@ -24,11 +23,11 @@ export const getUsers: RequestHandler = async (req: Request, res: Response) => {
 
 export const getUsersById: RequestHandler = async (req: Request, res: Response) => {
   try {
-    const userId = req.params.id;
-    const users = await getUserById(userId);
+    const userId:string = req.params.id;
+    const user = await getUserById(userId);
 
     res.status(200).json({
-      users,
+      user,
     });
   } catch (error) {
     console.error(
@@ -43,11 +42,11 @@ export const getUsersById: RequestHandler = async (req: Request, res: Response) 
 
 export const deleteUsers: RequestHandler = async (req: Request, res: Response) => {
   try {
-    const userId = req.params.id;
-    const users = await deleteUser(userId);
+    const userId:string = req.params.id;
+    const user = await deleteUser(userId);
 
     res.status(200).json({
-      users,
+      user,
     });
   } catch (error) {
     console.error(
@@ -62,17 +61,31 @@ export const deleteUsers: RequestHandler = async (req: Request, res: Response) =
 
 export const createUsers: RequestHandler = async (req: Request, res: Response) => {
   try {
+    let addressId:string = Date.now().toString();
     const values = [
       req.body.email,
       req.body.password,
       req.body.first_name,
       req.body.last_name,
-      addressId
+      req.body.phone_number,
+      addressId,
     ]
-    const users = await createUser(values);
 
+    const addValues = [
+      addressId,
+      req.body.unit_number,
+      req.body.address_line,
+      req.body.postal_code,
+      req.body.city,
+      req.body.province,
+      req.body.country,    
+    ]
+    const address = await createAddress(addValues);
+    const user = await createUser(values);
+    
     res.status(200).json({
-      users,
+      address,
+      user
     });
   } catch (error) {
     console.error(
@@ -88,7 +101,7 @@ export const createUsers: RequestHandler = async (req: Request, res: Response) =
 
 export const updateUsers: RequestHandler = async (req: Request, res: Response) => {
   try {
-    const userId = req.params.id;
+    const userId:string = req.params.id;
 
     const values = [
       req.body.email,
@@ -97,8 +110,8 @@ export const updateUsers: RequestHandler = async (req: Request, res: Response) =
       req.body.last_name,
       req.body.phone_number,
       req.body.address_id,
-
     ]
+    
     const update = await updateUser(values, userId);
 
     //used to see if user was updated.
