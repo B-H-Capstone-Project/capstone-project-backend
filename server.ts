@@ -1,3 +1,4 @@
+/*
 import express, { Express, Request, Response } from "express";
 import cors from "cors";
 
@@ -63,3 +64,36 @@ const start = async () => {
 };
 
 start();
+*/
+
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Stragegy;
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
+const mysql = require('mysql');
+const crypto = require('crypto');
+import * as MySQLConnector from "./src/database";
+let session = require('express-session');
+let mySQLStore = require('express-mysql-session')(session);
+
+
+const start = async () => {
+  try {
+    // connection;
+    MySQLConnector.db();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(bodyParser.json());
+app.use(bodyParser.urlendcoded({
+  extended: true
+}));
+app.use(express.static('public'));
+app.use('view engine', 'ejs');
