@@ -10,6 +10,10 @@ export const getUserById = (userId: any) => {
   return execute<User>(UserQueries.GetUserById, [userId]);
 };
 
+export const getUserByEmail = (email: string) => {
+  return execute<User>(UserQueries.GetUserByEmail, [email]);
+};
+
 export const deleteUser = (userId: any) => {
   return execute(UserQueries.DeleteUser, [userId]);
 };
