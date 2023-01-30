@@ -21,13 +21,8 @@
     "dotenv": "^16.0.3",
     "ejs": "^3.1.8",
     "express": "^4.18.2",
-<<<<<<< HEAD
-    "express-mysql-session": "^2.1.8",
-    "express-session": "^1.17.3",
-=======
     "express-validator": "^6.14.3",
     "jsonwebtoken": "^9.0.0",
->>>>>>> 92fdfbd51f105bea83902c5082c7e15eb76fe5fe
     "kill-port": "^2.0.1",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.20",
