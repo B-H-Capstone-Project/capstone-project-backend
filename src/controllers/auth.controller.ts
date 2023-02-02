@@ -7,8 +7,8 @@ import jwt, { Secret } from "jsonwebtoken";
 import { createSemicolonClassElement, idText } from "typescript";
 dotenv.config();
 
-// const secret: Secret = process.env.KEY;
-// const jwtExpiresInDays = "2d";
+export const SECRET_KEY: Secret = "u%H^CaEvdqVe0rD^@2Sr3Ep7OMp*lBlH";
+const jwtExpiresInDays = "2d";
 
 type signinUser = {
   email: string;
@@ -35,18 +35,18 @@ export const signin: RequestHandler = async (req: Request, res: Response) => {
   try {
     const { email, password }: signinUser = req.body;
     const query: any = await getUserByEmail(email);
-    const userServer = query[0];
+    const userServer: User = query[0];
     if (!userServer) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
     if (password !== userServer.password) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
+    const token = createJwtToken(email);
     res.status(200).json({
       message: "Sign in Success",
       email,
     });
-    // const token = createJwtToken(email);
   } catch (error) {
     console.error(
       "[auth][signin][Error] ",
