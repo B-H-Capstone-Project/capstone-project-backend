@@ -59,42 +59,16 @@ export const deleteUsers: RequestHandler = async (req: Request, res: Response) =
   }
 };
 
-export const createUsers: RequestHandler = async (req: Request, res: Response) => {
+export const createUsers = async (values: any, addValues: any) => {
   try {
-    let addressId:string = Date.now().toString();
-    const values = [
-      req.body.email,
-      req.body.password,
-      req.body.first_name,
-      req.body.last_name,
-      req.body.phone_number,
-      addressId,
-    ]
-
-    const addValues = [
-      addressId,
-      req.body.unit_number,
-      req.body.address_line,
-      req.body.postal_code,
-      req.body.city,
-      req.body.province,
-      req.body.country,    
-    ]
-    const address = await createAddress(addValues);
+    const address = await createAddress(addValues);    
     const user = await createUser(values);
-    
-    res.status(200).json({
-      address,
-      user
-    });
+    console.log(user);
   } catch (error) {
     console.error(
-      "[teams.controller][getTeams][Error] ",
+      "[user.controller][CreateUser][Error] ",
       typeof error === "object" ? JSON.stringify(error) : error
     );
-    res.status(500).json({
-      message: "There was an error when fetching teams",
-    });
   }
 };
 

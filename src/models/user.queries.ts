@@ -6,7 +6,7 @@ export const UserQueries = {
   CreateAddress:
     "INSERT INTO address (`unit_number`, `address_line`, `postal_code`, `city`, `province`, `country`) VALUES (?)",
   CreateUser:
-    "INSERT INTO user (`email`, `password`, `first_name`, `last_name`, `phone_number`, `address`) VALUES (?)",
+    "INSERT INTO user (`email`, `password`, `first_name`, `last_name`, `phone_number`, `address_id`) VALUES (?)",
   UpdateUser:
     "UPDATE user SET email = ?, password = ?, first_name = ?, last_name = ?, phone_number = ?, address_id = ? WHERE id = ?",
 };

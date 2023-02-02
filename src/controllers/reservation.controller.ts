@@ -50,10 +50,6 @@ export const createReservations: RequestHandler = async (req: Request, res: Resp
 export const getReservationsById: RequestHandler = async (req: Request, res: Response) => {
 try {
     const reservationId = req.params.id;
-    console.log("getReservationById: " + reservationId);
-    console.log("----------------------------------");
-    
-    
     const reservation = await getReservationById(reservationId);
     res.status(200).json({
         reservation,
@@ -100,7 +96,6 @@ export const updateReservations: RequestHandler = async (req: Request, res: Resp
 export const getReservationsByUsers: RequestHandler = async (req: Request, res: Response) => {
     try {
         const userId = req.params.user_id;
-        console.log("getResrvationByUsers: " + userId);
         const reservation = await getReservationByUser(userId);
         res.status(200).json({
             reservation,

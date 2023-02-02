@@ -1,7 +1,10 @@
 import * as dotenv from "dotenv";
 import { Request, RequestHandler, Response } from "express";
-import { getUserByEmail } from "../services/user.service";
+import { createUser, getUserByEmail } from "../services/user.service";
+import { createAddress } from "../services/address.service";
+import {createUsers} from "../controllers/user.controller";
 import jwt, { Secret } from "jsonwebtoken";
+import { createSemicolonClassElement, idText } from "typescript";
 dotenv.config();
 
 // const secret: Secret = process.env.KEY;
@@ -10,6 +13,21 @@ dotenv.config();
 type signinUser = {
   email: string;
   password: string;
+};
+
+type signUpUser = {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: number;
+  password: string;
+  confirm_password: string;
+  address_line: string;
+  unit_number: number;
+  postal_code: string;
+  city: string;
+  province: string; //not on signup form yet
+  country: string;
 };
 
 export const signin: RequestHandler = async (req: Request, res: Response) => {
@@ -25,7 +43,7 @@ export const signin: RequestHandler = async (req: Request, res: Response) => {
       return res.status(401).json({ message: "Invalid email or password" });
     }
     res.status(200).json({
-      message: "Signin Success",
+      message: "Sign in Success",
       email,
     });
     // const token = createJwtToken(email);
@@ -35,7 +53,7 @@ export const signin: RequestHandler = async (req: Request, res: Response) => {
       typeof error === "object" ? JSON.stringify(error) : error
     );
     res.status(500).json({
-      message: "There was an error when signin user",
+      message: "There was an error when sign in user",
     });
   }
 };
@@ -43,3 +61,51 @@ export const signin: RequestHandler = async (req: Request, res: Response) => {
 /* export const createJwtToken: string = (email: string) => {
   return jwt.sign({ email }, secret, { expiresIn: jwtExpiresInDays });
 }; */
+
+export const signUp: RequestHandler = async(req: Request, res: Response) => {
+  try {
+    let addressId:string = Date.now().toString();
+  
+
+    const values = [
+      req.body.email,
+      req.body.password,
+      req.body.first_name,
+      req.body.last_name,
+      req.body.phone_number,
+      addressId,
+    ]
+
+    const addValues = [
+      addressId,
+      req.body.unit_number,
+      req.body.address_line,
+      req.body.postal_code,
+      req.body.city,
+      req.body.province,
+      req.body.country,    
+    ]
+    
+    const query: any= await getUserByEmail(values[0]);
+    const userServer = query[0];
+    
+    if(!userServer){
+      await createUsers(values, addValues);
+    } else {
+    return res.status(401).json({ message: "There is already a user with that email" });      
+
+  }
+    res.status(200).json({
+      message: "Account Created",
+    });
+    // const token = createJwtToken(email);
+  } catch (error) {
+    console.error(
+      "[auth][signup][Error] ",
+      typeof error === "object" ? JSON.stringify(error) : error
+    );
+    res.status(500).json({
+      message: "There was an error while creating account",
+    });
+  }
+};
