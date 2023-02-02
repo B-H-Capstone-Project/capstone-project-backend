@@ -5,6 +5,7 @@ import { createAddress } from "../services/address.service";
 import {createUsers} from "../controllers/user.controller";
 import jwt, { Secret } from "jsonwebtoken";
 import { createSemicolonClassElement, idText } from "typescript";
+import { User } from "../types/user";
 dotenv.config();
 
 export const SECRET_KEY: Secret = "u%H^CaEvdqVe0rD^@2Sr3Ep7OMp*lBlH";
@@ -87,7 +88,7 @@ export const signUp: RequestHandler = async(req: Request, res: Response) => {
     ]
     
     const query: any= await getUserByEmail(values[0]);
-    const userServer = query[0];
+    const userServer: User = query[0];
     
     if(!userServer){
       await createUsers(values, addValues);
@@ -108,4 +109,8 @@ export const signUp: RequestHandler = async(req: Request, res: Response) => {
       message: "There was an error while creating account",
     });
   }
+};
+
+export const createJwtToken: any = (email: string) => {
+  return jwt.sign({ email }, SECRET_KEY, {expiresIn: jwtExpiresInDays });
 };
