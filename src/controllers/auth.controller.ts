@@ -2,10 +2,11 @@ import * as dotenv from "dotenv";
 import { Request, RequestHandler, Response } from "express";
 import { createUser, getUserByEmail } from "../services/user.service";
 import { createAddress } from "../services/address.service";
-import {createUsers} from "../controllers/user.controller";
+import { createUsers } from "../controllers/user.controller";
 import jwt, { Secret } from "jsonwebtoken";
 import { createSemicolonClassElement, idText } from "typescript";
 import { User } from "../types/user";
+import * as bcrypt from "bcrypt";
 dotenv.config();
 
 export const SECRET_KEY: Secret = "u%H^CaEvdqVe0rD^@2Sr3Ep7OMp*lBlH";
@@ -40,13 +41,13 @@ export const signin: RequestHandler = async (req: Request, res: Response) => {
     if (!userServer) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
-    if (password !== userServer.password) {
+    if (bcrypt.compareSync(password, userServer.password) === false) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
     const token = createJwtToken(email);
     res.status(200).json({
       message: "Sign in Success",
-      email,
+      token,
     });
   } catch (error) {
     console.error(
@@ -59,23 +60,19 @@ export const signin: RequestHandler = async (req: Request, res: Response) => {
   }
 };
 
-/* export const createJwtToken: string = (email: string) => {
-  return jwt.sign({ email }, secret, { expiresIn: jwtExpiresInDays });
-}; */
-
-export const signUp: RequestHandler = async(req: Request, res: Response) => {
+export const signUp: RequestHandler = async (req: Request, res: Response) => {
   try {
-    let addressId:string = Date.now().toString();
-  
+    let addressId: string = Date.now().toString();
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
     const values = [
       req.body.email,
-      req.body.password,
+      hashedPassword,
       req.body.first_name,
       req.body.last_name,
       req.body.phone_number,
       addressId,
-    ]
+    ];
 
     const addValues = [
       addressId,
@@ -84,22 +81,22 @@ export const signUp: RequestHandler = async(req: Request, res: Response) => {
       req.body.postal_code,
       req.body.city,
       req.body.province,
-      req.body.country,    
-    ]
-    
-    const query: any= await getUserByEmail(values[0]);
+      req.body.country,
+    ];
+
+    const query: any = await getUserByEmail(values[0]);
     const userServer: User = query[0];
-    
-    if(!userServer){
+
+    if (!userServer) {
       await createUsers(values, addValues);
     } else {
-    return res.status(401).json({ message: "There is already a user with that email" });      
-
-  }
+      return res
+        .status(401)
+        .json({ message: "There is already a user with that email" });
+    }
     res.status(200).json({
       message: "Account Created",
     });
-    // const token = createJwtToken(email);
   } catch (error) {
     console.error(
       "[auth][signup][Error] ",
@@ -112,5 +109,5 @@ export const signUp: RequestHandler = async(req: Request, res: Response) => {
 };
 
 export const createJwtToken: any = (email: string) => {
-  return jwt.sign({ email }, SECRET_KEY, {expiresIn: jwtExpiresInDays });
+  return jwt.sign({ email }, SECRET_KEY, { expiresIn: jwtExpiresInDays });
 };
