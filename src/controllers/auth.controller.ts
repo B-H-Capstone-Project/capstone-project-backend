@@ -1,14 +1,14 @@
-import * as dotenv from "dotenv";
-import { Request, RequestHandler, Response } from "express";
-import { getUserByEmail } from "../services/user.service";
-import { createAccount } from "../controllers/user.controller";
-import jwt, { Secret } from "jsonwebtoken";
-import { User } from "../types/user";
-import * as bcrypt from "bcrypt";
+import * as dotenv from 'dotenv';
+import { Request, RequestHandler, Response } from 'express';
+import { getUserByEmail } from '../services/user.service';
+import { createAccount } from '../controllers/user.controller';
+import jwt, { Secret } from 'jsonwebtoken';
+import { User } from '../types/user';
+import * as bcrypt from 'bcrypt';
 dotenv.config();
 
-export const SECRET_KEY: Secret = "u%H^CaEvdqVe0rD^@2Sr3Ep7OMp*lBlH";
-const jwtExpiresInDays = "2d";
+export const SECRET_KEY: Secret = 'u%H^CaEvdqVe0rD^@2Sr3Ep7OMp*lBlH';
+const jwtExpiresInDays = '2d';
 
 type signinUser = {
   email: string;
@@ -36,34 +36,31 @@ export const signin: RequestHandler = async (req: Request, res: Response) => {
     const { email, password }: signinUser = req.body;
     if (!email || !password) {
       return res.status(400).json({
-        message: "Email or Password not present",
+        message: 'Email or Password not present',
       });
     }
     const query: any = await getUserByEmail(email);
     const userServer: User = query[0];
 
     if (!userServer) {
-      return res.status(401).json({ message: "Invalid email or password" });
+      return res.status(401).json({ message: 'Invalid email or password' });
     }
 
     bcrypt.compare(password, userServer.password).then((result) => {
       if (result) {
         const token = createJwtToken(userServer.id, userServer.role);
         res.status(200).json({
-          message: "Sign in Success",
+          message: 'Sign in Success',
           token,
         });
       } else {
-        res.status(401).json({ message: "Invalid email or password" });
+        res.status(401).json({ message: 'Invalid email or password' });
       }
     });
   } catch (error) {
-    console.error(
-      "[auth][signin][Error] ",
-      typeof error === "object" ? JSON.stringify(error) : error
-    );
+    console.error('[auth][signin][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
     res.status(500).json({
-      message: "There was an error when sign in user",
+      message: 'There was an error when sign in user',
     });
   }
 };
@@ -98,20 +95,15 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
     if (!userServer) {
       await createAccount(values, addValues);
     } else {
-      return res
-        .status(401)
-        .json({ message: "There is already a user with that email" });
+      return res.status(401).json({ message: 'There is already a user with that email' });
     }
     res.status(200).json({
-      message: "Account Created",
+      message: 'Account Created',
     });
   } catch (error) {
-    console.error(
-      "[auth][signup][Error] ",
-      typeof error === "object" ? JSON.stringify(error) : error
-    );
+    console.error('[auth][signup][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
     res.status(500).json({
-      message: "There was an error while creating account",
+      message: 'There was an error while creating account',
     });
   }
 };

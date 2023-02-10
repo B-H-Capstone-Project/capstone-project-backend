@@ -1,12 +1,6 @@
-import { Request, RequestHandler, Response } from "express";
-import {
-  getUser,
-  getUserById,
-  deleteUser,
-  createUser,
-  updateUser,
-} from "../services/user.service";
-import { createAddress } from "../services/address.service";
+import { Request, RequestHandler, Response } from 'express';
+import { getUser, getUserById, deleteUser, createUser, updateUser } from '../services/user.service';
+import { createAddress } from '../services/address.service';
 
 export const getUsers: RequestHandler = async (req: Request, res: Response) => {
   try {
@@ -16,20 +10,14 @@ export const getUsers: RequestHandler = async (req: Request, res: Response) => {
       users,
     });
   } catch (error) {
-    console.error(
-      "[teams.controller][getTeams][Error] ",
-      typeof error === "object" ? JSON.stringify(error) : error
-    );
+    console.error('[teams.controller][getTeams][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
     res.status(500).json({
-      message: "There was an error when fetching teams",
+      message: 'There was an error when fetching teams',
     });
   }
 };
 
-export const getUsersById: RequestHandler = async (
-  req: Request,
-  res: Response
-) => {
+export const getUsersById: RequestHandler = async (req: Request, res: Response) => {
   try {
     const userId: string = req.params.id;
     const user = await getUserById(userId);
@@ -38,20 +26,14 @@ export const getUsersById: RequestHandler = async (
       user,
     });
   } catch (error) {
-    console.error(
-      "[teams.controller][getTeams][Error] ",
-      typeof error === "object" ? JSON.stringify(error) : error
-    );
+    console.error('[teams.controller][getTeams][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
     res.status(500).json({
-      message: "There was an error when fetching teams",
+      message: 'There was an error when fetching teams',
     });
   }
 };
 
-export const deleteUsers: RequestHandler = async (
-  req: Request,
-  res: Response
-) => {
+export const deleteUsers: RequestHandler = async (req: Request, res: Response) => {
   try {
     const userId: string = req.params.id;
     const user = await deleteUser(userId);
@@ -60,12 +42,9 @@ export const deleteUsers: RequestHandler = async (
       user,
     });
   } catch (error) {
-    console.error(
-      "[teams.controller][getTeams][Error] ",
-      typeof error === "object" ? JSON.stringify(error) : error
-    );
+    console.error('[teams.controller][getTeams][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
     res.status(500).json({
-      message: "There was an error when fetching teams",
+      message: 'There was an error when fetching teams',
     });
   }
 };
@@ -75,17 +54,11 @@ export const createAccount = async (values: any, addValues: any) => {
     const address = await createAddress(addValues);
     const user = await createUser(values);
   } catch (error) {
-    console.error(
-      "[user.controller][CreateUser][Error] ",
-      typeof error === "object" ? JSON.stringify(error) : error
-    );
+    console.error('[user.controller][CreateUser][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
   }
 };
 
-export const updateUsers: RequestHandler = async (
-  req: Request,
-  res: Response
-) => {
+export const updateUsers: RequestHandler = async (req: Request, res: Response) => {
   try {
     const userId: string = req.params.id;
 
@@ -107,12 +80,9 @@ export const updateUsers: RequestHandler = async (
       userUpdated,
     });
   } catch (error) {
-    console.error(
-      "[teams.controller][getTeams][Error] ",
-      typeof error === "object" ? JSON.stringify(error) : error
-    );
+    console.error('[teams.controller][getTeams][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
     res.status(500).json({
-      message: "There was an error when fetching teams",
+      message: 'There was an error when fetching teams',
     });
   }
 };
