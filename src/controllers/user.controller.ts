@@ -1,7 +1,12 @@
 import { Request, RequestHandler, Response } from "express";
-import { getUser, getUserById, deleteUser, createUser, updateUser } from "../services/user.service";
-import { createAddress } from '../services/address.service';
-
+import {
+  getUser,
+  getUserById,
+  deleteUser,
+  createUser,
+  updateUser,
+} from "../services/user.service";
+import { createAddress } from "../services/address.service";
 
 export const getUsers: RequestHandler = async (req: Request, res: Response) => {
   try {
@@ -21,9 +26,12 @@ export const getUsers: RequestHandler = async (req: Request, res: Response) => {
   }
 };
 
-export const getUsersById: RequestHandler = async (req: Request, res: Response) => {
+export const getUsersById: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
   try {
-    const userId:string = req.params.id;
+    const userId: string = req.params.id;
     const user = await getUserById(userId);
 
     res.status(200).json({
@@ -40,9 +48,12 @@ export const getUsersById: RequestHandler = async (req: Request, res: Response) 
   }
 };
 
-export const deleteUsers: RequestHandler = async (req: Request, res: Response) => {
+export const deleteUsers: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
   try {
-    const userId:string = req.params.id;
+    const userId: string = req.params.id;
     const user = await deleteUser(userId);
 
     res.status(200).json({
@@ -59,11 +70,10 @@ export const deleteUsers: RequestHandler = async (req: Request, res: Response) =
   }
 };
 
-export const createUsers = async (values: any, addValues: any) => {
+export const createAccount = async (values: any, addValues: any) => {
   try {
-    const address = await createAddress(addValues);    
+    const address = await createAddress(addValues);
     const user = await createUser(values);
-    console.log(user);
   } catch (error) {
     console.error(
       "[user.controller][CreateUser][Error] ",
@@ -72,10 +82,12 @@ export const createUsers = async (values: any, addValues: any) => {
   }
 };
 
-
-export const updateUsers: RequestHandler = async (req: Request, res: Response) => {
+export const updateUsers: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
   try {
-    const userId:string = req.params.id;
+    const userId: string = req.params.id;
 
     const values = [
       req.body.email,
@@ -84,8 +96,8 @@ export const updateUsers: RequestHandler = async (req: Request, res: Response) =
       req.body.last_name,
       req.body.phone_number,
       req.body.address_id,
-    ]
-    
+    ];
+
     const update = await updateUser(values, userId);
 
     //used to see if user was updated.

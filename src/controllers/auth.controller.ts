@@ -1,10 +1,8 @@
 import * as dotenv from "dotenv";
 import { Request, RequestHandler, Response } from "express";
-import { createUser, getUserByEmail } from "../services/user.service";
-import { createAddress } from "../services/address.service";
-import { createUsers } from "../controllers/user.controller";
+import { getUserByEmail } from "../services/user.service";
+import { createAccount } from "../controllers/user.controller";
 import jwt, { Secret } from "jsonwebtoken";
-import { createSemicolonClassElement, idText } from "typescript";
 import { User } from "../types/user";
 import * as bcrypt from "bcrypt";
 dotenv.config();
@@ -36,18 +34,28 @@ export const signin: RequestHandler = async (req: Request, res: Response) => {
   //
   try {
     const { email, password }: signinUser = req.body;
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "Email or Password not present",
+      });
+    }
     const query: any = await getUserByEmail(email);
     const userServer: User = query[0];
+
     if (!userServer) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
-    if (bcrypt.compareSync(password, userServer.password) === false) {
-      return res.status(401).json({ message: "Invalid email or password" });
-    }
-    const token = createJwtToken(email);
-    res.status(200).json({
-      message: "Sign in Success",
-      token,
+
+    bcrypt.compare(password, userServer.password).then((result) => {
+      if (result) {
+        const token = createJwtToken(userServer.id, userServer.role);
+        res.status(200).json({
+          message: "Sign in Success",
+          token,
+        });
+      } else {
+        res.status(401).json({ message: "Invalid email or password" });
+      }
     });
   } catch (error) {
     console.error(
@@ -88,7 +96,7 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
     const userServer: User = query[0];
 
     if (!userServer) {
-      await createUsers(values, addValues);
+      await createAccount(values, addValues);
     } else {
       return res
         .status(401)
@@ -108,6 +116,6 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
   }
 };
 
-export const createJwtToken: any = (email: string) => {
-  return jwt.sign({ email }, SECRET_KEY, { expiresIn: jwtExpiresInDays });
+export const createJwtToken: any = (id: string, role: number) => {
+  return jwt.sign({ id, role }, SECRET_KEY, { expiresIn: jwtExpiresInDays });
 };
