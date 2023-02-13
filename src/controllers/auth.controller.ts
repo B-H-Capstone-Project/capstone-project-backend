@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv';
 import { Request, RequestHandler, Response } from 'express';
-import { getUserByEmail } from '../services/user.service';
+import { getUserByEmail, getUserById } from '../services/user.service';
 import { createAccount } from '../controllers/user.controller';
 import jwt, { Secret } from 'jsonwebtoken';
 import { User } from '../types/user';
@@ -110,4 +110,16 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
 
 export const createJwtToken: any = (id: string, role: number) => {
   return jwt.sign({ id, role }, SECRET_KEY, { expiresIn: jwtExpiresInDays });
+};
+
+export const me: RequestHandler = async (req: any, res: Response) => {
+  const query: any = await getUserById(req.userId);
+  const user: User = query[0];
+  if (!user) {
+    return res.status(404).json({ message: 'user not found' });
+  }
+  res.status(200).json({
+    token: req.token,
+    id: user.id,
+  });
 };

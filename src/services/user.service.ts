@@ -1,12 +1,12 @@
-import { UserQueries } from "../models/user.queries";
-import { User } from "../types/user";
-import { execute } from "../database";
+import { UserQueries } from '../models/user.queries';
+import { User } from '../types/user';
+import { execute } from '../database';
 
 export const getUser = () => {
   return execute<User[]>(UserQueries.GetUsers, []);
 };
 
-export const getUserById = (userId: any) => {
+export const getUserById = (userId: string) => {
   return execute<User>(UserQueries.GetUserById, [userId]);
 };
 
