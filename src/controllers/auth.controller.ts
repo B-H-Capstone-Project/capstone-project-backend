@@ -5,6 +5,7 @@ import { createAccount } from '../controllers/user.controller';
 import jwt, { Secret } from 'jsonwebtoken';
 import { User } from '../types/user';
 import * as bcrypt from 'bcrypt';
+import RowDataPacket from 'mysql2/typings/mysql/lib/protocol/packets/RowDataPacket';
 dotenv.config();
 
 export const SECRET_KEY: Secret = 'u%H^CaEvdqVe0rD^@2Sr3Ep7OMp*lBlH';
@@ -39,9 +40,8 @@ export const signin: RequestHandler = async (req: Request, res: Response) => {
         message: 'Email or Password not present',
       });
     }
-    const query: any = await getUserByEmail(email);
-    const userServer: User = query[0];
 
+    const userServer = <RowDataPacket>(await getUserByEmail(email))[0];
     if (!userServer) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
@@ -89,8 +89,7 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
       req.body.country,
     ];
 
-    const query: any = await getUserByEmail(values[0]);
-    const userServer: User = query[0];
+    const userServer = <RowDataPacket>(await getUserByEmail(values[0]))[0];
 
     if (!userServer) {
       await createAccount(values, addValues);

@@ -1,6 +1,6 @@
-import mysql from "mysql";
-import { createPool, Pool } from "mysql";
-import * as dotenv from "dotenv";
+import mysql from 'mysql';
+import { createPool, Pool } from 'mysql';
+import * as dotenv from 'dotenv';
 dotenv.config();
 
 let pool: Pool;
@@ -17,7 +17,7 @@ let pool: Pool;
   console.log("Connected to the MySQL server");
 }); */
 
-export const db:any = () => {
+export const db: any = () => {
   try {
     pool = createPool({
       host: process.env.DB_HOST,
@@ -26,28 +26,26 @@ export const db:any = () => {
       database: process.env.DB_NAME,
     });
 
-    console.debug("MySql Adapter Pool generated successfully");
+    console.debug('MySql Adapter Pool generated successfully');
   } catch (error) {
-    console.error("[mysql.connector][init][Error]: ", error);
-    throw new Error("failed to initialized pool");
+    console.error('[mysql.connector][init][Error]: ', error);
+    throw new Error('failed to initialized pool');
   }
 };
 
-export const execute = <T>(
-  query: string,
-  params: string[] | Object
-): Promise<T> => {
+export const execute = <T>(query: string, params: string[] | Object): Promise<T> => {
   try {
-    if (!pool) throw new Error("Pool was not created.");
+    if (!pool) throw new Error('Pool was not created.');
     return new Promise<T>((resolve, reject) => {
       pool.query(query, params, (error, results) => {
+        console.log(results);
         if (error) reject(error);
         else resolve(results);
       });
     });
   } catch (error) {
-    console.error("[mysql.connector][execute][Error]: ", error);
-    throw new Error("failed to execute MySQL query");
+    console.error('[mysql.connector][execute][Error]: ', error);
+    throw new Error('failed to execute MySQL query');
   }
 };
 

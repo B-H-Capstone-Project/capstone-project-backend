@@ -1,6 +1,8 @@
 import { Request, RequestHandler, Response } from 'express';
 import { getUser, getUserById, deleteUser, createUser, updateUser } from '../services/user.service';
 import { createAddress } from '../services/address.service';
+import RowDataPacket from 'mysql2/typings/mysql/lib/protocol/packets/RowDataPacket';
+import { User } from '../types/user';
 
 export const getUsers: RequestHandler = async (req: Request, res: Response) => {
   try {
@@ -20,7 +22,9 @@ export const getUsers: RequestHandler = async (req: Request, res: Response) => {
 export const getUsersById: RequestHandler = async (req: Request, res: Response) => {
   try {
     const userId: string = req.params.id;
-    const user = await getUserById(userId);
+    const user = <RowDataPacket>(await getUserById(userId))[0];
+
+    console.log('getUsersById', user.email);
 
     res.status(200).json({
       user,
