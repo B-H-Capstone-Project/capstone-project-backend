@@ -1,7 +1,7 @@
 import { Request, RequestHandler, Response } from 'express';
-import * as reservationService /* { createReservation, deleteReservation, getReservationById, updateReservation, getReservationByUser } */ from '../services/reservation.service';
+import * as reservationService from '../services/reservation.service';
 
-export const createReservations: RequestHandler = async (req: Request, res: Response) => {
+export const createReservation: RequestHandler = async (req: Request, res: Response) => {
   let addressId = req.body.address_id;
   let userId = req.body.user_id;
 
@@ -13,14 +13,17 @@ export const createReservations: RequestHandler = async (req: Request, res: Resp
       reservation,
     });
   } catch (error) {
-    console.error('[teams.controller][getTeams][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
+    console.error(
+      '[reservation.controller][createReservations][Error] ',
+      typeof error === 'object' ? JSON.stringify(error) : error
+    );
     res.status(500).json({
-      message: 'There was an error when fetching teams',
+      message: 'There was an error when creating Reservation',
     });
   }
 };
 
-export const deleteReservations: RequestHandler = async (req: Request, res: Response) => {
+export const deleteReservation: RequestHandler = async (req: Request, res: Response) => {
   try {
     const reservationId = req.params.id;
     const reservation = await reservationService.deleteReservation(reservationId);
@@ -28,9 +31,12 @@ export const deleteReservations: RequestHandler = async (req: Request, res: Resp
       reservation,
     });
   } catch (error) {
-    console.error('[teams.controller][getTeams][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
+    console.error(
+      '[reservation.controller][deleteReservation][Error] ',
+      typeof error === 'object' ? JSON.stringify(error) : error
+    );
     res.status(500).json({
-      message: 'There was an error when fetching teams',
+      message: 'There was an error when deleting reservation',
     });
   }
 };
@@ -43,14 +49,17 @@ export const getReservationsById: RequestHandler = async (req: Request, res: Res
       reservation,
     });
   } catch (error) {
-    console.error('[teams.controller][getTeams][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
+    console.error(
+      '[reservation.controller][getReservationsById][Error] ',
+      typeof error === 'object' ? JSON.stringify(error) : error
+    );
     res.status(500).json({
-      message: 'There was an error when fetching teams',
+      message: 'There was an error when get reservations by id',
     });
   }
 };
 
-export const updateReservations: RequestHandler = async (req: Request, res: Response) => {
+export const updateReservation: RequestHandler = async (req: Request, res: Response) => {
   try {
     const reservation_id = req.params.id;
 
@@ -62,14 +71,17 @@ export const updateReservations: RequestHandler = async (req: Request, res: Resp
       reservation,
     });
   } catch (error) {
-    console.error('[teams.controller][getTeams][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
+    console.error(
+      '[reservation.controller][updateReservation][Error] ',
+      typeof error === 'object' ? JSON.stringify(error) : error
+    );
     res.status(500).json({
-      message: 'There was an error when fetching teams',
+      message: 'There was an error when updatig reservation',
     });
   }
 };
 
-export const getReservationsByUsers: RequestHandler = async (req: Request, res: Response) => {
+export const getReservationsByUser: RequestHandler = async (req: Request, res: Response) => {
   try {
     const userId = req.params.user_id;
     const reservation = await reservationService.getReservationByUser(userId);
@@ -77,23 +89,23 @@ export const getReservationsByUsers: RequestHandler = async (req: Request, res: 
       reservation,
     });
   } catch (error) {
-    console.error('[teams.controller][getTeams][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
+    console.error(
+      '[reservation.controller][getReservationsByUsers][Error] ',
+      typeof error === 'object' ? JSON.stringify(error) : error
+    );
     res.status(500).json({
-      message: 'There was an error when fetching teams',
+      message: 'There was an error when get reservations by user',
     });
   }
 };
 
 export const getReservations: RequestHandler = async (req: Request, res: Response) => {
   try {
-    console.log('inside get reservations');
     const reservations = await reservationService.getReservations();
 
     res.status(200).json({
       reservations,
     });
-
-    console.log('can get reservations');
   } catch (error) {
     console.error(
       '[reservation.controller][getReservations][Error] ',
