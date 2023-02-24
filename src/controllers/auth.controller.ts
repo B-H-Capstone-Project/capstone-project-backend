@@ -33,7 +33,7 @@ type signUpUser = {
 };
 
 export const signin: RequestHandler = async (req: Request, res: Response) => {
-  //
+
   try {
     const { email, password }: signinUser = req.body;
     const query: any = await getUserByEmail(email);
@@ -44,14 +44,14 @@ export const signin: RequestHandler = async (req: Request, res: Response) => {
     if (bcrypt.compareSync(password, userServer.password) === false) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
-    const token = createJwtToken(email);
+    const token = createJwtToken(userServer.id);
     res.status(200).json({
       message: "Sign in Success",
       token,
     });
   } catch (error) {
     console.error(
-      "[auth][signin][Error] ",
+      "[auth][signin][Error] ", 
       typeof error === "object" ? JSON.stringify(error) : error
     );
     res.status(500).json({
@@ -108,6 +108,6 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
   }
 };
 
-export const createJwtToken: any = (email: string) => {
-  return jwt.sign({ email }, SECRET_KEY, { expiresIn: jwtExpiresInDays });
+export const createJwtToken: any = (id: string) => {
+  return jwt.sign({ id }, SECRET_KEY, { expiresIn: jwtExpiresInDays });
 };
