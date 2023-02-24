@@ -1,5 +1,5 @@
 import { Request, RequestHandler, Response } from 'express';
-import { getUser, getUserById, deleteUser, createUser, updateUser } from '../services/user.service';
+import { getUser, getUserById, getUserEmployee, getUserCustomer ,deleteUser, createUser, updateUser } from '../services/user.service';
 import { createAddress } from '../services/address.service';
 import RowDataPacket from 'mysql2/typings/mysql/lib/protocol/packets/RowDataPacket';
 import { User } from '../types/user';
@@ -37,6 +37,36 @@ export const getUsersById: RequestHandler = async (req: Request, res: Response) 
   }
 };
 
+
+export const getUsersEmployee: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    const users = await getUserEmployee();
+
+    res.status(200).json({
+      users,
+    });
+  } catch (error) {
+    console.error('[teams.controller][getTeams][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
+    res.status(500).json({
+      message: 'There was an error when fetching teams',
+    });
+  }
+};
+
+export const getUsersCustomer: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    const users = await getUserCustomer();
+
+    res.status(200).json({
+      users,
+    });
+  } catch (error) {
+    console.error('[teams.controller][getTeams][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
+    res.status(500).json({
+      message: 'There was an error when fetching teams',
+    });
+  }
+};
 export const deleteUsers: RequestHandler = async (req: Request, res: Response) => {
   try {
     const userId: string = req.params.id;
