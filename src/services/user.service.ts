@@ -14,6 +14,15 @@ export const getUserByEmail = (email: string) => {
   return execute<User>(UserQueries.GetUserByEmail, [email]);
 };
 
+export const getUserEmployee = () => {
+  return execute<User[]>(UserQueries.GetUsersEmployee, []);
+};
+
+export const getUserCustomer = () => {
+  return execute<User[]>(UserQueries.GetUsersCustomer, []);
+};
+
+
 export const deleteUser = (userId: any) => {
   return execute(UserQueries.DeleteUser, [userId]);
 };
