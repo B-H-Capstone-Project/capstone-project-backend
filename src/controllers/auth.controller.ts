@@ -107,6 +107,48 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
   }
 };
 
+
+export const newReservation: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    let addressId: string = Date.now().toString();
+
+    const values = [
+      req.body.email,
+      req.body.first_name,
+      req.body.last_name,
+      req.body.phone_number,
+      addressId,
+    ];
+
+    const addValues = [
+      addressId,
+      req.body.unit_number,
+      req.body.address_line,
+      req.body.postal_code,
+      req.body.city,
+      req.body.province,
+      req.body.country,
+    ];
+
+    const userServer = <RowDataPacket>(await getUserByEmail(values[0]))[0];
+
+    if (!userServer) {
+      await createAccount(values, addValues);
+    } else {
+      return res.status(401).json({ message: 'There is already a user with that email' });
+    }
+    res.status(200).json({
+      message: 'Account Created',
+    });
+  } catch (error) {
+    console.error('[auth][signup][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
+    res.status(500).json({
+      message: 'There was an error while creating account',
+    });
+  }
+};
+
+
 export const createJwtToken: any = (id: string, role: number) => {
   return jwt.sign({ id, role }, SECRET_KEY, { expiresIn: jwtExpiresInDays });
 };
