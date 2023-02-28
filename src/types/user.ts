@@ -3,11 +3,15 @@ import { Address } from './address';
 export interface User extends RowDataPacket {
   id: string;
   email: string;
-  password: string;
+  is_active: boolean;
   first_name: string;
   last_name: string;
-  phone_number: number;
-  address_id: Address[];
+  password: string;
   role: number;
-  is_active: boolean;
+  phone_number: string;
+  address_line1: string;
+  address_line2?: string;
+  city: string;
+  province: string;
+  country: string;
 }
