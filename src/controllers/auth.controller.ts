@@ -71,7 +71,7 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
     const values = [
-      req.body.email,
+      req.body.email.toLowerCase(),
       hashedPassword,
       req.body.first_name,
       req.body.last_name,
