@@ -32,7 +32,7 @@ type signUpUser = {
 };
 
 export const signin: RequestHandler = async (req: Request, res: Response) => {
-  //
+
   try {
     const { email, password }: signinUser = req.body;
     if (!email || !password) {
