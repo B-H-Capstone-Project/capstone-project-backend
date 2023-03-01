@@ -1,5 +1,13 @@
 import { Request, RequestHandler, Response } from 'express';
-import { getUser, getUserById, getUserEmployee, getUserCustomer ,deleteUser, createUser, updateUser } from '../services/user.service';
+import {
+  getUser,
+  getUserById,
+  getUserEmployee,
+  getUserCustomer,
+  deleteUser,
+  createUser,
+  updateUser,
+} from '../services/user.service';
 import { createAddress } from '../services/address.service';
 import RowDataPacket from 'mysql2/typings/mysql/lib/protocol/packets/RowDataPacket';
 import { User } from '../types/user';
@@ -36,7 +44,6 @@ export const getUsersById: RequestHandler = async (req: Request, res: Response) 
     });
   }
 };
-
 
 export const getUsersEmployee: RequestHandler = async (req: Request, res: Response) => {
   try {
@@ -83,14 +90,14 @@ export const deleteUsers: RequestHandler = async (req: Request, res: Response) =
   }
 };
 
-export const createAccount = async (values: any, addValues: any) => {
+/* export const createAccount = async (values: any) => {
   try {
     const address = await createAddress(addValues);
     const user = await createUser(values);
   } catch (error) {
     console.error('[user.controller][CreateUser][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
   }
-};
+}; */
 
 export const updateUsers: RequestHandler = async (req: Request, res: Response) => {
   try {

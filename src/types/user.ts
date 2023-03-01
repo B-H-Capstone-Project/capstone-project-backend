@@ -1,5 +1,4 @@
 import { RowDataPacket } from 'mysql2';
-import { Address } from './address';
 export interface User extends RowDataPacket {
   id: string;
   email: string;

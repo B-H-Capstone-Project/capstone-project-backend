@@ -1,7 +1,6 @@
 import * as dotenv from 'dotenv';
 import { Request, RequestHandler, Response } from 'express';
-import { getUserByEmail, getUserById } from '../services/user.service';
-import { createAccount } from '../controllers/user.controller';
+import { createUser, getUserByEmail, getUserById } from '../services/user.service';
 import jwt, { Secret } from 'jsonwebtoken';
 import { User } from '../types/user';
 import * as bcrypt from 'bcrypt';
@@ -32,7 +31,6 @@ type signUpUser = {
 };
 
 export const signin: RequestHandler = async (req: Request, res: Response) => {
-
   try {
     const { email, password }: signinUser = req.body;
     if (!email || !password) {
@@ -67,20 +65,14 @@ export const signin: RequestHandler = async (req: Request, res: Response) => {
 
 export const signUp: RequestHandler = async (req: Request, res: Response) => {
   try {
-    let addressId: string = Date.now().toString();
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
     const values = [
       req.body.email.toLowerCase(),
-      hashedPassword,
       req.body.first_name,
       req.body.last_name,
+      hashedPassword,
       req.body.phone_number,
-      addressId,
-    ];
-
-    const addValues = [
-      addressId,
       req.body.unit_number,
       req.body.address_line,
       req.body.postal_code,
@@ -92,7 +84,7 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
     const userServer = <RowDataPacket>(await getUserByEmail(values[0]))[0];
 
     if (!userServer) {
-      await createAccount(values, addValues);
+      await createUser(values);
     } else {
       return res.status(401).json({ message: 'There is already a user with that email' });
     }
