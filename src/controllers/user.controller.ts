@@ -11,6 +11,7 @@ import {
 import { createAddress } from '../services/address.service';
 import RowDataPacket from 'mysql2/typings/mysql/lib/protocol/packets/RowDataPacket';
 import { User } from '../types/user';
+import * as bcrypt from 'bcrypt';
 
 export const getUsers: RequestHandler = async (req: Request, res: Response) => {
   try {
@@ -102,14 +103,19 @@ export const deleteUsers: RequestHandler = async (req: Request, res: Response) =
 export const updateUsers: RequestHandler = async (req: Request, res: Response) => {
   try {
     const userId: string = req.params.id;
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
     const values = [
-      req.body.email,
-      req.body.password,
+      hashedPassword,
       req.body.first_name,
       req.body.last_name,
       req.body.phone_number,
-      req.body.address_id,
+      req.body.address_line1,
+      req.body.address_line2,
+      req.body.city,
+      req.body.province,
+      req.body.postal_code,
+      req.body.country,
     ];
 
     const update = await updateUser(values, userId);
