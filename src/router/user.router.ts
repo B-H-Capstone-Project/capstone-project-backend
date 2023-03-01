@@ -12,7 +12,6 @@ router.get('/users', userController.getUsers);
 // Get User by Id
 router.get('/user/:id', userController.getUsersById);
 
-
 // Get Users - Employee - Role=1 or 2
 router.get('/users/employee', userController.getUsersEmployee);
 

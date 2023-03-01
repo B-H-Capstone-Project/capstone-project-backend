@@ -10,9 +10,9 @@ export const UserQueries = {
   DeleteUser: "DELETE FROM user WHERE id = ?",
 
   // Create
-  CreateAddress: "INSERT INTO address (`unit_number`, `address_line`, `postal_code`, `city`, `province`, `country`) VALUES (?)",
-  CreateUser: "INSERT INTO user (`email`, `password`, `first_name`, `last_name`, `phone_number`, `address_id`) VALUES (?)",
+  // CreateAddress: "INSERT INTO address (`unit_number`, `address_line`, `postal_code`, `city`, `province`, `country`) VALUES (?)",
+  CreateUser: "INSERT INTO user (`email`, `is_active`, `first_name`, `last_name`, `password`, `role`, `phone_number`, `address_line1`, `address_line2`, `city`, `province`, `country`) VALUES (?)",
 
   // Update
-  UpdateUser: "UPDATE user SET email = ?, password = ?, first_name = ?, last_name = ?, phone_number = ?, address_id = ? WHERE id = ?",
+  UpdateUser: "UPDATE user SET password = ?, first_name = ?, last_name = ?, phone_number = ?, address_line1 = ?, address_line2 = ?, city = ?, province = ?, postal_code = ?, country = ? WHERE id = ?",
 };
