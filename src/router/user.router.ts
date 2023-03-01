@@ -1,10 +1,11 @@
 import express from 'express';
 import * as userController from '../controllers/user.controller';
+import * as authController from '../controllers/auth.controller';
 
 const router = express.Router();
 
 // Create User with Address
-router.post('/user', userController.createAccount);
+router.post('/user', authController.signUp);
 
 // Get Users
 router.get('/users', userController.getUsers);

@@ -2,11 +2,8 @@ import { Request, RequestHandler, Response } from 'express';
 import * as reservationService from '../services/reservation.service';
 
 export const createReservation: RequestHandler = async (req: Request, res: Response) => {
-  let addressId = req.body.address_id;
-  let userId = req.body.user_id;
-
   try {
-    const values = [addressId, userId, req.body.type, req.body.date, req.body.description];
+    const values = [req.body.user_id, req.body.type, req.body.date, req.body.description];
 
     const reservation = await reservationService.createReservation(values);
     res.status(200).json({
@@ -63,8 +60,8 @@ export const updateReservation: RequestHandler = async (req: Request, res: Respo
   try {
     const reservation_id = req.params.id;
 
-    const values = [req.body.address_id, req.body.user_id, req.body.type, req.body.date, req.body.description];
-    console.log(values);
+    const values = [req.body.user_id, req.body.type, req.body.date, req.body.description];
+    console.log(req.body);
 
     const reservation = await reservationService.updateReservation(values, reservation_id);
     res.status(200).json({
