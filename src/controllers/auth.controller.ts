@@ -22,7 +22,8 @@ type signUpUser = {
   phone_number: number;
   password: string;
   confirm_password: string;
-  address_line: string;
+  address_line1: string;
+  address_line2: string;
   unit_number: number;
   postal_code: string;
   city: string;
@@ -73,8 +74,8 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
       req.body.last_name,
       hashedPassword,
       req.body.phone_number,
-      req.body.unit_number,
       req.body.address_line,
+      req.body.unit_number,
       req.body.postal_code,
       req.body.city,
       req.body.province,
