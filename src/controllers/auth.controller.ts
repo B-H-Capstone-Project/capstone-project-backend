@@ -24,7 +24,6 @@ type signUpUser = {
   confirm_password: string;
   address_line1: string;
   address_line2: string;
-  unit_number: number;
   postal_code: string;
   city: string;
   province: string; //not on signup form yet
@@ -66,21 +65,23 @@ export const signin: RequestHandler = async (req: Request, res: Response) => {
 
 export const signUp: RequestHandler = async (req: Request, res: Response) => {
   try {
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const values = [
       req.body.email.toLowerCase(),
       req.body.first_name,
       req.body.last_name,
       hashedPassword,
       req.body.phone_number,
-      req.body.address_line,
-      req.body.unit_number,
+      req.body.address_line1,
+      req.body.address_line2,
       req.body.postal_code,
       req.body.city,
       req.body.province,
       req.body.country,
     ];
+    
+    console.log(values);
 
     const userServer = <RowDataPacket>(await getUserByEmail(values[0]))[0];
 

@@ -15,4 +15,5 @@ export interface User extends RowDataPacket {
   postal_code: string;
   country: string;
   profile: string;
+  created_date: Date;
 }
