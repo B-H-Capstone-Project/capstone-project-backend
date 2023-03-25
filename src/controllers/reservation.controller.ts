@@ -1,24 +1,24 @@
 import { Request, RequestHandler, Response } from 'express';
 import * as reservationService from '../services/reservation.service';
 
-export const createReservation: RequestHandler = async (req: Request, res: Response) => {
-  try {
-    const values = [req.body.user_id, req.body.type, new Date(req.body.date), req.body.description];
+// export const createReservation: RequestHandler = async (req: Request, res: Response) => {
+//   try {
+//     const values = [req.body.user_id, req.body.type, new Date(req.body.date), req.body.description];
 
-    const reservation = await reservationService.createReservation(values);
-    res.status(200).json({
-      reservation,
-    });
-  } catch (error) {
-    console.error(
-      '[reservation.controller][createReservations][Error] ',
-      typeof error === 'object' ? JSON.stringify(error) : error
-    );
-    res.status(500).json({
-      message: 'There was an error when creating Reservation',
-    });
-  }
-};
+//     const reservation = await reservationService.createReservation(values);
+//     res.status(200).json({
+//       reservation,
+//     });
+//   } catch (error) {
+//     console.error(
+//       '[reservation.controller][createReservations][Error] ',
+//       typeof error === 'object' ? JSON.stringify(error) : error
+//     );
+//     res.status(500).json({
+//       message: 'There was an error when creating Reservation',
+//     });
+//   }
+// };
 
 export const deleteReservation: RequestHandler = async (req: Request, res: Response) => {
   try {
@@ -110,6 +110,25 @@ export const getReservations: RequestHandler = async (req: Request, res: Respons
     );
     res.status(500).json({
       message: 'There was an error when fetching reservations',
+    });
+  }
+};
+
+export const createReservationAdmin: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    const values = [req.body.user_id, req.body.type, new Date(req.body.date), req.body.description];
+
+    const reservation = await reservationService.createReservation(values);
+    res.status(200).json({
+      reservation,
+    });
+  } catch (error) {
+    console.error(
+      '[reservation.controller][createReservations][Error] ',
+      typeof error === 'object' ? JSON.stringify(error) : error
+    );
+    res.status(500).json({
+      message: 'There was an error when creating Reservation',
     });
   }
 };
