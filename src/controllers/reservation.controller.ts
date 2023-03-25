@@ -3,7 +3,7 @@ import * as reservationService from '../services/reservation.service';
 
 export const createReservation: RequestHandler = async (req: Request, res: Response) => {
   try {
-    const values = [req.body.user_id, req.body.type, req.body.date, req.body.description];
+    const values = [req.body.user_id, req.body.type, new Date(req.body.date), req.body.description];
 
     const reservation = await reservationService.createReservation(values);
     res.status(200).json({
