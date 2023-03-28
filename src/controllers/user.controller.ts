@@ -8,7 +8,6 @@ import {
   createUser,
   updateUser,
 } from '../services/user.service';
-import { createAddress } from '../services/address.service';
 import RowDataPacket from 'mysql2/typings/mysql/lib/protocol/packets/RowDataPacket';
 import { User } from '../types/user';
 import * as bcrypt from 'bcrypt';

@@ -1,12 +1,16 @@
 import express from 'express';
+import { body } from 'express-validator';
 import * as reservationController from '../controllers/reservation.controller';
 import * as reservationUserController from '../controllers/reservationUser.controller';
 
 const router = express.Router();
 
+const reservationValidateCredential = [
+    body('type').notEmpty(),
+  ]
 // Reservation
 // Create reservation
-router.post('/reservation', reservationController.createReservationAdmin);
+router.post('/reservation/newreservation', reservationValidateCredential, reservationController.createReservations);
 
 // Get Reservation By User Id
 router.get('/reservation/user/:user_id', reservationController.getReservationsByUser);
