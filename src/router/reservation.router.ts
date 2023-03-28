@@ -1,6 +1,7 @@
 import express from 'express';
 import { body } from 'express-validator';
 import * as reservationController from '../controllers/reservation.controller';
+import * as reservationUserController from '../controllers/reservationUser.controller';
 
 const router = express.Router();
 
@@ -25,5 +26,7 @@ router.delete('/reservation/:id', reservationController.deleteReservation);
 
 // Get All Reservation (admin side)
 router.get('/reservations', reservationController.getReservations);
+
+router.get('/reservationsUsers', reservationUserController.getReservationsUsers);
 
 export default router;
