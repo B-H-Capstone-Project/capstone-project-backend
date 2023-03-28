@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 import { Request, RequestHandler, Response } from 'express';
-import { getUserByEmail, getUserById } from '../services/user.service';
-import { createAccount } from '../controllers/user.controller';
+import { createUser, getUserByEmail, getUserById } from '../services/user.service';
+import {createReservation} from '../services/reservation.service';
 import jwt, { Secret } from 'jsonwebtoken';
 import { User } from '../types/user';
 import * as bcrypt from 'bcrypt';
@@ -23,16 +23,16 @@ type signUpUser = {
   phone_number: number;
   password: string;
   confirm_password: string;
-  address_line: string;
+  address_line1: string;
+  address_line2: string;
   unit_number: number;
   postal_code: string;
   city: string;
-  province: string; //not on signup form yet
+  province: string;
   country: string;
 };
 
 export const signin: RequestHandler = async (req: Request, res: Response) => {
-  //
   try {
     const { email, password }: signinUser = req.body;
     if (!email || !password) {
@@ -67,22 +67,16 @@ export const signin: RequestHandler = async (req: Request, res: Response) => {
 
 export const signUp: RequestHandler = async (req: Request, res: Response) => {
   try {
-    let addressId: string = Date.now().toString();
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
     const values = [
-      req.body.email,
+      req.body.email.toLowerCase(),
+      req.body.first_name,
+      req.body.last_name,
       hashedPassword,
-      req.body.first_name,
-      req.body.last_name,
       req.body.phone_number,
-      addressId,
-    ];
-
-    const addValues = [
-      addressId,
-      req.body.unit_number,
       req.body.address_line,
+      req.body.unit_number,
       req.body.postal_code,
       req.body.city,
       req.body.province,
@@ -92,7 +86,7 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
     const userServer = <RowDataPacket>(await getUserByEmail(values[0]))[0];
 
     if (!userServer) {
-      await createAccount(values, addValues);
+      await createUser(values);
     } else {
       return res.status(401).json({ message: 'There is already a user with that email' });
     }
@@ -108,37 +102,32 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
 };
 
 
-export const newReservation: RequestHandler = async (req: Request, res: Response) => {
+/* export const newReservation: RequestHandler = async (req: Request, res: Response) => {
   try {
-    let addressId: string = Date.now().toString();
+    console.log(req.body);
+    const email = req.body.email;
+    console.log(email);
+    
+   const userServer =  <RowDataPacket>(await getUserByEmail(email))[0];
 
-    const values = [
-      req.body.email,
-      req.body.first_name,
-      req.body.last_name,
-      req.body.phone_number,
-      addressId,
-    ];
-
-    const addValues = [
-      addressId,
-      req.body.unit_number,
-      req.body.address_line,
-      req.body.postal_code,
-      req.body.city,
-      req.body.province,
-      req.body.country,
-    ];
-
-    const userServer = <RowDataPacket>(await getUserByEmail(values[0]))[0];
-
+    console.log(userServer);
+    
     if (!userServer) {
-      await createAccount(values, addValues);
-    } else {
-      return res.status(401).json({ message: 'There is already a user with that email' });
+      return res.status(401).json({ message: 'There is no account with that email'});
     }
+
+    
+    const resValues = [
+      userServer.id,
+      req.body.type,
+      req.body.date,
+      req.body.description,
+    ]
+
+    await createReservation(resValues);
+
     res.status(200).json({
-      message: 'Account Created',
+      message: 'Reservation Created',
     });
   } catch (error) {
     console.error('[auth][signup][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
@@ -146,7 +135,7 @@ export const newReservation: RequestHandler = async (req: Request, res: Response
       message: 'There was an error while creating account',
     });
   }
-};
+};*/
 
 
 export const createJwtToken: any = (id: string, role: number) => {

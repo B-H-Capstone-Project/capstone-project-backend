@@ -38,7 +38,7 @@ export const execute = <T>(query: string, params: string[] | Object): Promise<T>
     if (!pool) throw new Error('Pool was not created.');
     return new Promise<T>((resolve, reject) => {
       pool.query(query, params, (error, results) => {
-        console.log(results);
+        // console.log(results);
         if (error) reject(error);
         else resolve(results);
       });

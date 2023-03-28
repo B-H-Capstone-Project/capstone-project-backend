@@ -1,8 +1,9 @@
-export interface Reservation {
-    id: string;
-    user_id: number;
-    address_id: string;
-    type: string;
-    date: Date;
-    desc: string;
+import { RowDataPacket } from 'mysql2';
+
+export interface Reservation extends RowDataPacket {
+  id: number;
+  user_id: number;
+  type: string;
+  date: Date;
+  description: string;
 }
