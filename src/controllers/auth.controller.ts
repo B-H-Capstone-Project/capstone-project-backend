@@ -1,11 +1,12 @@
 import * as dotenv from 'dotenv';
 import { Request, RequestHandler, Response } from 'express';
 import { createUser, getUserByEmail, getUserById } from '../services/user.service';
-import {createReservation} from '../services/reservation.service';
+import { createReservation } from '../services/reservation.service';
 import jwt, { Secret } from 'jsonwebtoken';
 import { User } from '../types/user';
 import * as bcrypt from 'bcrypt';
 import RowDataPacket from 'mysql2/typings/mysql/lib/protocol/packets/RowDataPacket';
+import { sendEmail } from '../auth/emailVerification';
 dotenv.config();
 
 export const SECRET_KEY: Secret = 'u%H^CaEvdqVe0rD^@2Sr3Ep7OMp*lBlH';
@@ -66,14 +67,13 @@ export const signin: RequestHandler = async (req: Request, res: Response) => {
 
 export const signUp: RequestHandler = async (req: Request, res: Response) => {
   try {
-    if(req.body.role == null || undefined){
-      req.body.role = 3
-      console.log(req.body.role);
-      
+    if (req.body.role == null || undefined) {
+      req.body.role = 3;
+      // console.log(req.body.role);
     }
-    if(req.body.is_active == null || undefined){
-      req.body.is_active = 1
-      console.log(req.body.is_active);
+    if (req.body.is_active == null || undefined) {
+      req.body.is_active = 1;
+      // console.log(req.body.is_active);
     }
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const values = [
@@ -89,18 +89,29 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
       req.body.postal_code,
       req.body.country,
       req.body.role,
-      req.body.is_active
+      req.body.is_active,
     ];
-    
-    console.log(values);
+
+    // console.log(values);
 
     const userServer = <RowDataPacket>(await getUserByEmail(values[0]))[0];
+
+    const verifyEmailToken = jwt.sign({ id: req.body.email.toLowerCase() }, SECRET_KEY, { expiresIn: '30m' });
+
+    const url = `http://localhost:3000/verify/${verifyEmailToken}`;
+
+    await sendEmail(
+      req.body.email.toLowerCase(),
+      'Please verify your email for Boss and Hoss',
+      `Please click this email to confirm your email: <a href="${url}">${url}</a>`
+    );
 
     if (!userServer) {
       await createUser(values);
     } else {
       return res.status(401).json({ message: 'There is already a user with that email' });
     }
+
     res.status(200).json({
       message: 'Account Created',
     });
@@ -111,7 +122,6 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
     });
   }
 };
-
 
 /* export const newReservation: RequestHandler = async (req: Request, res: Response) => {
   try {
@@ -147,7 +157,6 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
     });
   }
 };*/
-
 
 export const createJwtToken: any = (id: string, role: number) => {
   return jwt.sign({ id, role }, SECRET_KEY, { expiresIn: jwtExpiresInDays });
