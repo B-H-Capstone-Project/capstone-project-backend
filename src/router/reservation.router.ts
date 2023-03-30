@@ -6,10 +6,10 @@ const router = express.Router();
 
 // Reservation
 // Create reservation
-router.post('/reservation', reservationController.createReservationAdmin);
+router.post('/reservation/:id', reservationController.createReservationAdmin);
 
 // Get Reservation By User Id
-router.get('/reservation/user/:user_id', reservationController.getReservationsByUser);
+router.get('/reservation/user/:id', reservationController.getReservationsByUser);
 
 // Get Reservation By Resrvation Id
 router.get('/reservation/:id', reservationController.getReservationsById);

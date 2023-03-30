@@ -1,5 +1,7 @@
 import { Request, RequestHandler, Response } from 'express';
 import * as reservationService from '../services/reservation.service';
+import { ReservationWithUser } from '../types/reservationUser';
+import { IReservationInput, Reservation } from '../types/reservation';
 
 // export const createReservation: RequestHandler = async (req: Request, res: Response) => {
 //   try {
@@ -80,7 +82,7 @@ export const updateReservation: RequestHandler = async (req: Request, res: Respo
 
 export const getReservationsByUser: RequestHandler = async (req: Request, res: Response) => {
   try {
-    const userId = req.params.user_id;
+    const userId = req.params.id;
     const reservation = await reservationService.getReservationByUser(userId);
     res.status(200).json({
       reservation,
@@ -114,9 +116,23 @@ export const getReservations: RequestHandler = async (req: Request, res: Respons
   }
 };
 
+
 export const createReservationAdmin: RequestHandler = async (req: Request, res: Response) => {
   try {
-    const values = [req.body.user_id, req.body.type, new Date(req.body.date), req.body.description];
+    const reservationInputData: IReservationInput = req.body;
+    console.log(reservationInputData);
+    console.log(req.params);
+    const values = [
+      req.params.id,
+      reservationInputData.type,
+      new Date(reservationInputData.date),
+      reservationInputData.description,
+      reservationInputData.address_line1,
+      reservationInputData.address_line2,
+      reservationInputData.city,
+      reservationInputData.province,
+      reservationInputData.postal_code,
+    ];
 
     const reservation = await reservationService.createReservation(values);
     res.status(200).json({
