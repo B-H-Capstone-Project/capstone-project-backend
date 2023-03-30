@@ -46,6 +46,10 @@ export const signin: RequestHandler = async (req: Request, res: Response) => {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
+    if (!userServer.is_verified) {
+      return res.status(401).json({ message: 'Not verified account' });
+    }
+
     bcrypt.compare(password, userServer.password).then((result) => {
       if (result) {
         const token = createJwtToken(userServer.id, userServer.role);
