@@ -36,9 +36,9 @@ app.use(express.json());
 app.use(cors());
 
 
-/* app.get("/", (req: Request, res: Response) => {
+app.get("/", (req: Request, res: Response) => {
   res.json("hello this is backend");
-});    */
+});    
 
 // Router
 // user

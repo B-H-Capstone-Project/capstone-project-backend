@@ -1,19 +1,20 @@
 import { RowDataPacket } from 'mysql2';
-export interface User extends RowDataPacket {
-  id: string;
-  email: string;
-  is_active: boolean;
+export interface ReservationWithUser extends RowDataPacket {
+  user_id: number;
   first_name: string;
   last_name: string;
-  password: string;
-  role: number;
+  email: string;
   phone_number: string;
   address_line1: string;
   address_line2?: string;
   city: string;
   province: string;
-  postal_code: string;
   country: string;
+  postal_code: string;
   profile: string;
-  created_date: Date;
+  reservation_id: number;
+  type: string;
+  date: Date;
+  description: string;
+  is_confirmed: boolean;
 }

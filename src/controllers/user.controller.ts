@@ -116,8 +116,11 @@ export const updateUsers: RequestHandler = async (req: Request, res: Response) =
       req.body.province,
       req.body.postal_code,
       req.body.country,
+      req.body.role,
+      req.body.is_active
     ];
 
+    console.log(values);
     const update = await updateUser(values, userId);
 
     //used to see if user was updated.
