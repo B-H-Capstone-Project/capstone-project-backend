@@ -10,6 +10,27 @@ import authRouter from "./src/router/auth.router";
 
 const app: Express = express();
 
+
+const path = require('path');
+
+const _dirname = path.dirname("");
+const buildPath = path.join(_dirname, '../capstone-project-frontend/capstone-project-frontend/build');
+
+app.use(express.static(buildPath));
+
+app.get('/*', function(req, res) {
+  res.json("hello this is backend");
+  res.sendFile(
+    path.join('/build/index.html', {root: _dirname}),
+    function (err) {
+      if (err) {
+        res.status(500).send(err);
+      }
+    }
+    
+    );
+})
+
 app.use(express.json());
 app.use(cors());
 
