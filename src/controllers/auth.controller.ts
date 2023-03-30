@@ -1,6 +1,7 @@
 import * as dotenv from 'dotenv';
 import { Request, RequestHandler, Response } from 'express';
 import { createUser, getUserByEmail, getUserById } from '../services/user.service';
+import {createReservation} from '../services/reservation.service';
 import jwt, { Secret } from 'jsonwebtoken';
 import { User } from '../types/user';
 import * as bcrypt from 'bcrypt';
@@ -26,7 +27,7 @@ type signUpUser = {
   address_line2: string;
   postal_code: string;
   city: string;
-  province: string; //not on signup form yet
+  province: string;
   country: string;
 };
 
@@ -110,6 +111,43 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
     });
   }
 };
+
+
+/* export const newReservation: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    console.log(req.body);
+    const email = req.body.email;
+    console.log(email);
+    
+   const userServer =  <RowDataPacket>(await getUserByEmail(email))[0];
+
+    console.log(userServer);
+    
+    if (!userServer) {
+      return res.status(401).json({ message: 'There is no account with that email'});
+    }
+
+    
+    const resValues = [
+      userServer.id,
+      req.body.type,
+      req.body.date,
+      req.body.description,
+    ]
+
+    await createReservation(resValues);
+
+    res.status(200).json({
+      message: 'Reservation Created',
+    });
+  } catch (error) {
+    console.error('[auth][signup][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
+    res.status(500).json({
+      message: 'There was an error while creating account',
+    });
+  }
+};*/
+
 
 export const createJwtToken: any = (id: string, role: number) => {
   return jwt.sign({ id, role }, SECRET_KEY, { expiresIn: jwtExpiresInDays });
