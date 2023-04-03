@@ -5,7 +5,6 @@ import errorHandlerMiddleware from "./src/middleware/error-handler";
 import notFoundMiddleware from "./src/middleware/not-found";
 import * as MySQLConnector from "./src/database";
 import userRouter from "./src/router/user.router";
-import addressRouter from "./src/router/address.router";
 import resrvationRouter from "./src/router/reservation.router";
 import authRouter from "./src/router/auth.router";
 
@@ -22,9 +21,6 @@ app.get("/", (req: Request, res: Response) => {
 // Router
 // user
 app.use(userRouter);
-
-// address
-app.use(addressRouter);
 
 // reservation
 app.use(resrvationRouter);

@@ -10,11 +10,11 @@ export const getReservationsUsers: RequestHandler = async (req: Request, res: Re
     });
   } catch (error) {
     console.error(
-      '[reservation.controller][getReservations][Error] ',
+      '[reservation.controller][getReservationsUsers][Error] ',
       typeof error === 'object' ? JSON.stringify(error) : error
     );
     res.status(500).json({
-      message: 'There was an error when fetching reservations',
+      message: 'There was an error when fetching reservationsUsers',
     });
   }
 };
