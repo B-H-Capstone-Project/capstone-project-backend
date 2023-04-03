@@ -2,6 +2,7 @@ import { UserQueries } from '../models/user.queries';
 import { User } from '../types/user';
 import { execute } from '../database';
 
+// Get Users
 export const getUser = () => {
   return execute<User[]>(UserQueries.GetUsers, []);
 };
@@ -22,17 +23,36 @@ export const getUserCustomer = () => {
   return execute<User[]>(UserQueries.GetUsersCustomer, []);
 };
 
-
+// Delete
 export const deleteUser = (userId: any) => {
   return execute(UserQueries.DeleteUser, [userId]);
 };
 
+// Create
 export const createUser = (values: any) => {
   return execute(UserQueries.CreateUser, [values]);
 };
 
+// Update
 export const updateUser = (values: any, userId: any) => {
   return execute(UserQueries.UpdateUser, [...values, userId]);
 };
 
-export default { getUser, getUserById, deleteUser, createUser, updateUser };
+// Get New Employess & Customers
+export const getNewEmployee = () => {
+  return execute<User[]>(UserQueries.GetNewEmployees, []);
+};
+export const getNewCustomer = () => {
+  return execute<User[]>(UserQueries.GetNewCustomers, []);
+};
+
+// Get % of New Employess & Customers 
+export const getNewEmployeePercentage = () => {
+  return execute<User[]>(UserQueries.GetNewEmployeesPercentage, []);
+};
+export const getNewCustomerPercentage = () => {
+  return execute<User[]>(UserQueries.GetNewCustomersPercentage, []);
+};
+
+
+export default { getUser, getUserById, deleteUser, createUser, updateUser, getNewEmployee,getNewCustomer,getNewEmployeePercentage, getNewCustomerPercentage };

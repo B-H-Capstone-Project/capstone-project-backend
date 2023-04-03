@@ -23,7 +23,23 @@ export const getReservationByUser = (userId: any) => {
 };
 
 export const getReservations = () => {
-  return execute<Reservation[]>(ReservationQueries.GetReservations, []);
+  return execute(ReservationQueries.GetReservations, []);
 };
 
-export default { getReservationById, deleteReservation, createReservation, updateReservation, getReservationByUser };
+// Get New Reservations
+export const getNewReservation = () => {
+  return execute<Reservation[]>(ReservationQueries.GetNewReservations, []);
+};
+export const getNewPendingReservation = () => {
+  return execute<Reservation[]>(ReservationQueries.GetNewPendingReservations, []);
+};
+
+// Get New Reservations %
+export const getNewReservationPercentage = () => {
+  return execute<Reservation[]>(ReservationQueries.GetNewReservationsPercentage, []);
+};
+export const getNewPendingReservationPercentage = () => {
+  return execute<Reservation[]>(ReservationQueries.GetNewPendingReservationsPercentage, []);
+};
+
+export default { getReservationById, deleteReservation, createReservation, updateReservation, getReservationByUser, getReservations, getNewReservation, getNewPendingReservation, getNewReservationPercentage, getNewPendingReservationPercentage};
