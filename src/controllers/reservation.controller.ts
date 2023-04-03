@@ -261,3 +261,75 @@ export const createReservationAdmin: RequestHandler = async (req: Request, res: 
     });
   }
 };
+
+// Get New Reservations & Pending Reservation
+export const getNewReservations: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    const reservations = await reservationService.getNewReservation();
+    res.status(200).json({
+      reservations,
+    });
+  } catch (error) {
+    console.error(
+      '[reservation.controller][getNewReservations][Error] ',
+      typeof error === 'object' ? JSON.stringify(error) : error
+    );
+    res.status(500).json({
+      message: 'There was an error when get new reservations',
+    });
+  }
+};
+
+export const getNewPendingReservations: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    const reservations = await reservationService.getNewPendingReservation();
+    res.status(200).json({
+      reservations,
+    });
+  } catch (error) {
+    console.error(
+      '[reservation.controller][getNewPendingReservations][Error] ',
+      typeof error === 'object' ? JSON.stringify(error) : error
+    );
+    res.status(500).json({
+      message: 'There was an error when get new pending reservations',
+    });
+  }
+};
+
+// Get % of New Reservation & Pending Reservation
+export const getNewReservationsPercentage: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    const reservations = await reservationService.getNewReservationPercentage();
+    const reservationPercentage = reservations[0].increase_percentage;
+    res.status(200).json({
+      reservationPercentage,
+    });
+  } catch (error) {
+    console.error(
+      '[reservation.controller][getNewReservations %][Error] ',
+      typeof error === 'object' ? JSON.stringify(error) : error
+    );
+    res.status(500).json({
+      message: 'There was an error when get % of new reservations',
+    });
+  }
+};
+
+  export const getNewPendingReservationsPercentage: RequestHandler = async (req: Request, res: Response) => {
+    try {
+      const reservations = await reservationService.getNewPendingReservationPercentage();
+      const reservationPercentage = reservations[0].increase_percentage;
+      res.status(200).json({
+        reservationPercentage,
+      });
+    } catch (error) {
+      console.error(
+        '[reservation.controller][getNewReservations %][Error] ',
+        typeof error === 'object' ? JSON.stringify(error) : error
+      );
+      res.status(500).json({
+        message: 'There was an error when get % of new pending reservations',
+      });
+    }
+  };
