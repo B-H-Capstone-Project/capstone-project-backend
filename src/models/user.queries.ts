@@ -17,5 +17,5 @@ export const UserQueries = {
   UpdateUser:
     'UPDATE user SET password = ?, first_name = ?, last_name = ?, phone_number = ?, address_line1 = ?, address_line2 = ?, city = ?, province = ?, postal_code = ?, country = ?, role = ?, is_active = ? WHERE id = ?',
 
-  VerifyUser: 'UPDATE user SET is_verified = 1 WHERE id = ?',
+  VerifySignup: 'UPDATE user SET is_verified = 1 WHERE email = ?',
 };

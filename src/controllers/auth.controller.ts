@@ -1,8 +1,8 @@
 import * as dotenv from 'dotenv';
 import { Request, RequestHandler, Response } from 'express';
-import { createUser, getUserByEmail, getUserById } from '../services/user.service';
+import { createUser, getUserByEmail, getUserById, verifySignup } from '../services/user.service';
 import { createReservation } from '../services/reservation.service';
-import jwt, { Secret } from 'jsonwebtoken';
+import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
 import { User } from '../types/user';
 import * as bcrypt from 'bcrypt';
 import RowDataPacket from 'mysql2/typings/mysql/lib/protocol/packets/RowDataPacket';
@@ -17,6 +17,9 @@ type signinUser = {
   password: string;
 };
 
+export interface TokenInterface {
+  id: string;
+}
 type signUpUser = {
   first_name: string;
   last_name: string;
@@ -102,8 +105,7 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
 
     const verifyEmailToken = jwt.sign({ id: req.body.email.toLowerCase() }, SECRET_KEY, { expiresIn: '30m' });
 
-    const url = `http://localhost:3000/verify/${verifyEmailToken}`;
-
+    const url = `${process.env.BASE_URL}/auth/verify/${verifyEmailToken}`;
     await sendEmail(
       req.body.email.toLowerCase(),
       'Please verify your email for Boss and Hoss',
@@ -117,12 +119,35 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
     }
 
     res.status(200).json({
-      message: 'Account Created',
+      message: 'Email has sent ',
     });
   } catch (error) {
     console.error('[auth][signup][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
     res.status(500).json({
       message: 'There was an error while creating account',
+    });
+  }
+};
+
+export const verifyUser: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    console.log(jwt.decode(req.params.token));
+    jwt.verify(req.params.token, SECRET_KEY, async (err, decoded) => {
+      if (err) {
+        console.log(err);
+      } else if (decoded) {
+        const { id } = decoded as TokenInterface;
+        await verifySignup(id);
+      } else {
+        console.log('invalid token');
+      }
+    });
+
+    res.redirect('http://localhost:3000/signin');
+  } catch (error) {
+    console.error('[auth][verifyUser][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
+    res.status(500).json({
+      message: 'There was an error while verify User with token',
     });
   }
 };
