@@ -6,7 +6,6 @@ import { createReservation } from '../services/reservation.service';
 import { getUserByEmail, updateUser } from '../services/user.service';
 import RowDataPacket from 'mysql2/typings/mysql/lib/protocol/packets/RowDataPacket';
 
-
 /*export const newReservation: RequestHandler = async (req: Request, res: Response) => {
   try {
     console.log(req.body);
@@ -44,7 +43,7 @@ import RowDataPacket from 'mysql2/typings/mysql/lib/protocol/packets/RowDataPack
 
 export const createReservations: RequestHandler = async (req: Request, res: Response) => {
   try {
-   //console.log("req.body: " + JSON.stringify(req.body));
+    //console.log("req.body: " + JSON.stringify(req.body));
     //console.log(req.body.date);
     const email = req.body.data.user.email;
     var firstName = req.body.first_name;
@@ -58,44 +57,43 @@ export const createReservations: RequestHandler = async (req: Request, res: Resp
     var country = req.body.country;
 
     console.log(firstName);
-    
 
-    if(firstName == null){
+    if (firstName == null) {
       firstName = req.body.data.user.first_name;
     }
-    if(lastName == null){
+    if (lastName == null) {
       lastName = req.body.data.user.last_name;
     }
-    if(phoneNum == null){
+    if (phoneNum == null) {
       phoneNum = req.body.data.user.phone_number;
     }
-    if(add1 == null){
+    if (add1 == null) {
       add1 = req.body.data.user.address_line1;
     }
-    if(add2 == null){
+    if (add2 == null) {
       add2 = req.body.data.user.address_line2;
     }
-    if(city == null){
+    if (city == null) {
       city = req.body.data.user.city;
     }
-    if(prov == null){
+    if (prov == null) {
       prov = req.body.data.user.province;
     }
-    if(country == null){
+    if (country == null) {
       country = req.body.data.user.country;
     }
-    if(postalCode == null){
+    if (postalCode == null) {
       postalCode = req.body.data.user.postal_code;
     }
 
     console.log(req.body);
-    
-   const userServer =  <RowDataPacket>(await getUserByEmail(email))[0];
+
+    const userServer = <RowDataPacket>(await getUserByEmail(email))[0];
 
     //console.log("userServer: " + JSON.stringify(userServer));
-    
+
     if (!userServer) {
-      return res.status(401).json({ message: 'There is no account with that email'});
+      return res.status(401).json({ message: 'There is no account with that email' });
     }
 
     const userValues = [
@@ -108,16 +106,11 @@ export const createReservations: RequestHandler = async (req: Request, res: Resp
       city,
       prov,
       postalCode,
-      country
-    ]
+      country,
+    ];
     await updateUser(userValues, userServer.id);
 
-    const resValues = [
-      userServer.id,
-      req.body.type,
-      new Date(req.body.date),
-      req.body.description,
-    ]
+    const resValues = [userServer.id, req.body.type, new Date(req.body.date), req.body.description];
 
     await createReservation(resValues);
 
@@ -173,9 +166,21 @@ export const getReservationsById: RequestHandler = async (req: Request, res: Res
 
 export const updateReservation: RequestHandler = async (req: Request, res: Response) => {
   try {
+    const reservationInputData: IReservationInput = req.body;
     const reservation_id = req.params.id;
 
-    const values = [req.body.user_id, req.body.type, req.body.date, req.body.description];
+    const values = [
+      req.params.id,
+      reservationInputData.type,
+      new Date(reservationInputData.date),
+      reservationInputData.description,
+      reservationInputData.address_line1,
+      reservationInputData.address_line2,
+      reservationInputData.city,
+      reservationInputData.province,
+      reservationInputData.postal_code,
+    ];
+    // const values = [req.body.user_id, req.body.type, req.body.date, req.body.description];
     console.log(req.body);
 
     const reservation = await reservationService.updateReservation(values, reservation_id);
@@ -228,7 +233,6 @@ export const getReservations: RequestHandler = async (req: Request, res: Respons
     });
   }
 };
-
 
 export const createReservationAdmin: RequestHandler = async (req: Request, res: Response) => {
   try {
