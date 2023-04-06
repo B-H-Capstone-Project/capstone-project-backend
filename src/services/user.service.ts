@@ -22,7 +22,6 @@ export const getUserEmployee = () => {
 export const getUserCustomer = () => {
   return execute<User[]>(UserQueries.GetUsersCustomer, []);
 };
-
 // Delete
 export const deleteUser = (userId: any) => {
   return execute(UserQueries.DeleteUser, [userId]);
@@ -36,6 +35,10 @@ export const createUser = (values: any) => {
 // Update
 export const updateUser = (values: any, userId: any) => {
   return execute(UserQueries.UpdateUser, [...values, userId]);
+};
+
+export const verifySignup = (email: any) => {
+  return execute(UserQueries.VerifySignup, [email]);
 };
 
 // Get New Employess & Customers
@@ -55,4 +58,4 @@ export const getNewCustomerPercentage = () => {
 };
 
 
-export default { getUser, getUserById, deleteUser, createUser, updateUser, getNewEmployee,getNewCustomer,getNewEmployeePercentage, getNewCustomerPercentage };
+export default { getUser, getUserById, deleteUser, createUser, updateUser, verifySignup, getNewEmployee,getNewCustomer,getNewEmployeePercentage, getNewCustomerPercentage };

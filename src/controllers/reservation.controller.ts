@@ -1,7 +1,6 @@
 import { Request, RequestHandler, Response } from 'express';
 import * as reservationService from '../services/reservation.service';
-import { ReservationWithUser } from '../types/reservationUser';
-import { IReservationInput, Reservation } from '../types/reservation';
+import { IReservationInput } from '../types/reservation';
 import { createReservation } from '../services/reservation.service';
 import { getUserByEmail, updateUser } from '../services/user.service';
 import RowDataPacket from 'mysql2/typings/mysql/lib/protocol/packets/RowDataPacket';
@@ -61,16 +60,11 @@ export const createReservations: RequestHandler = async (req: Request, res: Resp
       city,
       prov,
       postalCode,
-      country
-    ]
+      country,
+    ];
     await updateUser(userValues, userServer.id);
 
-    const resValues = [
-      userServer.id,
-      req.body.type,
-      new Date(req.body.date),
-      req.body.description,
-    ]
+    const resValues = [userServer.id, req.body.type, new Date(req.body.date), req.body.description];
 
     await createReservation(resValues);
 
@@ -126,9 +120,21 @@ export const getReservationsById: RequestHandler = async (req: Request, res: Res
 
 export const updateReservation: RequestHandler = async (req: Request, res: Response) => {
   try {
+    const reservationInputData: IReservationInput = req.body;
     const reservation_id = req.params.id;
 
-    const values = [req.body.user_id, req.body.type, req.body.date, req.body.description];
+    const values = [
+      req.params.id,
+      reservationInputData.type,
+      new Date(reservationInputData.date),
+      reservationInputData.description,
+      reservationInputData.address_line1,
+      reservationInputData.address_line2,
+      reservationInputData.city,
+      reservationInputData.province,
+      reservationInputData.postal_code,
+    ];
+    // const values = [req.body.user_id, req.body.type, req.body.date, req.body.description];
     console.log(req.body);
 
     const reservation = await reservationService.updateReservation(values, reservation_id);
@@ -181,7 +187,6 @@ export const getReservations: RequestHandler = async (req: Request, res: Respons
     });
   }
 };
-
 
 export const createReservationAdmin: RequestHandler = async (req: Request, res: Response) => {
   try {
@@ -289,16 +294,10 @@ export const getReservationAddress: RequestHandler = async (req: Request, res: R
   try {
 
     const addresses: any = await reservationService.getReservationAddress();
-    // console.log("before map: " + JSON.stringify(addresses));
-    // const sentences:string[] = addresses.map((address: { address_line1: any; city: any; province: any; postal_code: any; country: any; }) => `${address.address_line1}, ${address.city}, ${address.province}, ${address.postal_code}, ${address.country}`);
-    // console.log("after map: " + sentences);
 
     const newAddresses = addresses.map((address: any) => (
       `${address.address_line1}, ${address.city}, ${address.province} ${address.postal_code}, ${address.country}`
     ));
-
-    // console.log("-----------------------");
-    // console.log(newAddresses);
 
     res.status(200).json({
       newAddresses,
