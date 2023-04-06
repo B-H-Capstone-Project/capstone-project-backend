@@ -19,6 +19,14 @@ router.get('/users/employee', userController.getUsersEmployee);
 // Get Users - Customer - Role=3
 router.get('/users/customer', userController.getUsersCustomer);
 
+// Get New Employees - week & %
+router.get('/users/newemployee', userController.getNewEmployees);
+router.get('/users/newemployee/percentage', userController.getNewEmployeesPercentage);
+
+// Get New Customers - week & %
+router.get('/users/newcustomer', userController.getNewCustomers);
+router.get('/users/newcustomer/percentage', userController.getNewCustomersPercentage);
+
 // Update User
 router.put('/user/:id', userController.updateUsers);
 
