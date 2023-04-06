@@ -42,4 +42,9 @@ export const getNewPendingReservationPercentage = () => {
   return execute<Reservation[]>(ReservationQueries.GetNewPendingReservationsPercentage, []);
 };
 
-export default { getReservationById, deleteReservation, createReservation, updateReservation, getReservationByUser, getReservations, getNewReservation, getNewPendingReservation, getNewReservationPercentage, getNewPendingReservationPercentage};
+// Get Only Reservation Address
+export const getReservationAddress = () => {
+  return execute(ReservationQueries.GetReservationAddress, []);
+};
+
+export default { getReservationById, deleteReservation, createReservation, updateReservation, getReservationByUser, getReservations, getNewReservation, getNewPendingReservation, getNewReservationPercentage, getNewPendingReservationPercentage, getReservationAddress};

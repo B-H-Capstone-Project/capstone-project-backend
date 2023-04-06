@@ -32,7 +32,7 @@ export const getUsersById: RequestHandler = async (req: Request, res: Response) 
     const userId: string = req.params.id;
     const user = <RowDataPacket>(await getUserById(userId))[0];
 
-    console.log('getUsersById', user.email);
+    // console.log('getUsersById', user.email);
 
     res.status(200).json({
       user,

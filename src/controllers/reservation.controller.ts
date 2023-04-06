@@ -6,46 +6,8 @@ import { createReservation } from '../services/reservation.service';
 import { getUserByEmail, updateUser } from '../services/user.service';
 import RowDataPacket from 'mysql2/typings/mysql/lib/protocol/packets/RowDataPacket';
 
-
-/*export const newReservation: RequestHandler = async (req: Request, res: Response) => {
-  try {
-    console.log(req.body);
-    const email = req.body.email;
-    console.log(email);
-    
-   const userServer =  <RowDataPacket>(await getUserByEmail(email))[0];
-
-    console.log(userServer);
-    
-    if (!userServer) {
-      return res.status(401).json({ message: 'There is no account with that email'});
-    }
-
-    
-    const resValues = [
-      userServer.id,
-      req.body.type,
-      req.body.date,
-      req.body.description,
-    ]
-
-    await createReservation(resValues);
-
-    res.status(200).json({
-      message: 'Reservation Created',
-    });
-  } catch (error) {
-    console.error('[auth][signup][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
-    res.status(500).json({
-      message: 'There was an error while creating account',
-    });
-  }
-};*/
-
 export const createReservations: RequestHandler = async (req: Request, res: Response) => {
   try {
-   //console.log("req.body: " + JSON.stringify(req.body));
-    //console.log(req.body.date);
     const email = req.body.data.user.email;
     var firstName = req.body.first_name;
     var lastName = req.body.last_name;
@@ -56,46 +18,37 @@ export const createReservations: RequestHandler = async (req: Request, res: Resp
     var prov = req.body.province;
     var city = req.body.city;
     var country = req.body.country;
-
-    console.log(firstName);
-    
-
-    if(firstName == null){
+    if (firstName == null) {
       firstName = req.body.data.user.first_name;
     }
-    if(lastName == null){
+    if (lastName == null) {
       lastName = req.body.data.user.last_name;
     }
-    if(phoneNum == null){
+    if (phoneNum == null) {
       phoneNum = req.body.data.user.phone_number;
     }
-    if(add1 == null){
+    if (add1 == null) {
       add1 = req.body.data.user.address_line1;
     }
-    if(add2 == null){
+    if (add2 == null) {
       add2 = req.body.data.user.address_line2;
     }
-    if(city == null){
+    if (city == null) {
       city = req.body.data.user.city;
     }
-    if(prov == null){
+    if (prov == null) {
       prov = req.body.data.user.province;
     }
-    if(country == null){
+    if (country == null) {
       country = req.body.data.user.country;
     }
-    if(postalCode == null){
+    if (postalCode == null) {
       postalCode = req.body.data.user.postal_code;
     }
+    const userServer = <RowDataPacket>(await getUserByEmail(email))[0];
 
-    console.log(req.body);
-    
-   const userServer =  <RowDataPacket>(await getUserByEmail(email))[0];
-
-    //console.log("userServer: " + JSON.stringify(userServer));
-    
     if (!userServer) {
-      return res.status(401).json({ message: 'There is no account with that email'});
+      return res.status(401).json({ message: 'There is no account with that email' });
     }
 
     const userValues = [
@@ -233,8 +186,6 @@ export const getReservations: RequestHandler = async (req: Request, res: Respons
 export const createReservationAdmin: RequestHandler = async (req: Request, res: Response) => {
   try {
     const reservationInputData: IReservationInput = req.body;
-    console.log(reservationInputData);
-    console.log(req.params);
     const values = [
       req.params.id,
       reservationInputData.type,
@@ -316,20 +267,49 @@ export const getNewReservationsPercentage: RequestHandler = async (req: Request,
   }
 };
 
-  export const getNewPendingReservationsPercentage: RequestHandler = async (req: Request, res: Response) => {
-    try {
-      const reservations = await reservationService.getNewPendingReservationPercentage();
-      const reservationPercentage = reservations[0].increase_percentage;
-      res.status(200).json({
-        reservationPercentage,
-      });
-    } catch (error) {
-      console.error(
-        '[reservation.controller][getNewReservations %][Error] ',
-        typeof error === 'object' ? JSON.stringify(error) : error
-      );
-      res.status(500).json({
-        message: 'There was an error when get % of new pending reservations',
-      });
-    }
-  };
+export const getNewPendingReservationsPercentage: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    const reservations = await reservationService.getNewPendingReservationPercentage();
+    const reservationPercentage = reservations[0].increase_percentage;
+    res.status(200).json({
+      reservationPercentage,
+    });
+  } catch (error) {
+    console.error(
+      '[reservation.controller][getNewReservations %][Error] ',
+      typeof error === 'object' ? JSON.stringify(error) : error
+    );
+    res.status(500).json({
+      message: 'There was an error when get % of new pending reservations',
+    });
+  }
+};
+
+export const getReservationAddress: RequestHandler = async (req: Request, res: Response) => {
+  try {
+
+    const addresses: any = await reservationService.getReservationAddress();
+    // console.log("before map: " + JSON.stringify(addresses));
+    // const sentences:string[] = addresses.map((address: { address_line1: any; city: any; province: any; postal_code: any; country: any; }) => `${address.address_line1}, ${address.city}, ${address.province}, ${address.postal_code}, ${address.country}`);
+    // console.log("after map: " + sentences);
+
+    const newAddresses = addresses.map((address: any) => (
+      `${address.address_line1}, ${address.city}, ${address.province} ${address.postal_code}, ${address.country}`
+    ));
+
+    // console.log("-----------------------");
+    // console.log(newAddresses);
+
+    res.status(200).json({
+      newAddresses,
+    });
+  } catch (error) {
+    console.error(
+      '[reservation.controller][reservationAddress][Error] ',
+      typeof error === 'object' ? JSON.stringify(error) : error
+    );
+    res.status(500).json({
+      message: 'There was an error when fetching reservationAddress',
+    });
+  }
+};

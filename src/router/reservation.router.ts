@@ -37,4 +37,7 @@ router.get('/newpendingreservations', reservationController.getNewPendingReserva
 router.get('/newreservations/percentage', reservationController.getNewReservationsPercentage)
 router.get('/newpendingreservations/percentage', reservationController.getNewPendingReservationsPercentage)
 
+// Get Only Address
+router.get('/reservations/address', reservationController.getReservationAddress)
+
 export default router;
