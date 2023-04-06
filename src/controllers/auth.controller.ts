@@ -3,7 +3,7 @@ import { Request, RequestHandler, Response } from 'express';
 import { createUser, getUserByEmail, getUserById, verifySignup } from '../services/user.service';
 import { createReservation } from '../services/reservation.service';
 import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
-import { User } from '../types/user';
+import { TokenInterface, User } from '../types/user';
 import * as bcrypt from 'bcrypt';
 import RowDataPacket from 'mysql2/typings/mysql/lib/protocol/packets/RowDataPacket';
 import { sendEmail } from '../auth/emailVerification';
@@ -17,9 +17,6 @@ type signinUser = {
   password: string;
 };
 
-export interface TokenInterface {
-  id: string;
-}
 type signUpUser = {
   first_name: string;
   last_name: string;
@@ -76,11 +73,9 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
   try {
     if (req.body.role == null || undefined) {
       req.body.role = 3;
-      // console.log(req.body.role);
     }
     if (req.body.is_active == null || undefined) {
       req.body.is_active = 1;
-      // console.log(req.body.is_active);
     }
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const values = [
@@ -98,8 +93,6 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
       req.body.role,
       req.body.is_active,
     ];
-
-    // console.log(values);
 
     const userServer = <RowDataPacket>(await getUserByEmail(values[0]))[0];
 
@@ -131,10 +124,13 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
 
 export const verifyUser: RequestHandler = async (req: Request, res: Response) => {
   try {
-    console.log(jwt.decode(req.params.token));
     jwt.verify(req.params.token, SECRET_KEY, async (err, decoded) => {
       if (err) {
-        console.log(err);
+        if (err.name === 'TokenExpiredError') {
+          return res.status(401).json({ message: 'Token expired.' });
+        } else {
+          return res.status(401).json({ message: 'Invalid token.' });
+        }
       } else if (decoded) {
         const { id } = decoded as TokenInterface;
         await verifySignup(id);
@@ -151,41 +147,6 @@ export const verifyUser: RequestHandler = async (req: Request, res: Response) =>
     });
   }
 };
-
-/* export const newReservation: RequestHandler = async (req: Request, res: Response) => {
-  try {
-    console.log(req.body);
-    const email = req.body.email;
-    console.log(email);
-    
-   const userServer =  <RowDataPacket>(await getUserByEmail(email))[0];
-
-    console.log(userServer);
-    
-    if (!userServer) {
-      return res.status(401).json({ message: 'There is no account with that email'});
-    }
-
-    
-    const resValues = [
-      userServer.id,
-      req.body.type,
-      req.body.date,
-      req.body.description,
-    ]
-
-    await createReservation(resValues);
-
-    res.status(200).json({
-      message: 'Reservation Created',
-    });
-  } catch (error) {
-    console.error('[auth][signup][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
-    res.status(500).json({
-      message: 'There was an error while creating account',
-    });
-  }
-};*/
 
 export const createJwtToken: any = (id: string, role: number) => {
   return jwt.sign({ id, role }, SECRET_KEY, { expiresIn: jwtExpiresInDays });

@@ -49,7 +49,7 @@ export const getNewCustomer = () => {
   return execute<User[]>(UserQueries.GetNewCustomers, []);
 };
 
-// Get % of New Employess & Customers 
+// Get % of New Employess & Customers
 export const getNewEmployeePercentage = () => {
   return execute<User[]>(UserQueries.GetNewEmployeesPercentage, []);
 };
@@ -57,5 +57,21 @@ export const getNewCustomerPercentage = () => {
   return execute<User[]>(UserQueries.GetNewCustomersPercentage, []);
 };
 
+export const updatePassword = (newPwd: any, email: any) => {
+  return execute(UserQueries.UpdatePassword, [newPwd, email]);
+};
 
-export default { getUser, getUserById, deleteUser, createUser, updateUser, verifySignup, getNewEmployee,getNewCustomer,getNewEmployeePercentage, getNewCustomerPercentage };
+export default {
+  getUser,
+  getUserById,
+  getUserByEmail,
+  deleteUser,
+  createUser,
+  updateUser,
+  verifySignup,
+  getNewEmployee,
+  getNewCustomer,
+  getNewEmployeePercentage,
+  getNewCustomerPercentage,
+  updatePassword,
+};

@@ -33,4 +33,9 @@ router.put('/user/:id', userController.updateUsers);
 // Delete User by Id
 router.delete('/user/:id', userController.deleteUsers);
 
+// ask email for reset password
+router.post('/reset-password', userController.requestResetPassword);
+
+router.post('/reset-password/:token', userController.resetPassword);
+
 export default router;
