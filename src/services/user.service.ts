@@ -38,4 +38,17 @@ export const verifySignup = (email: any) => {
   return execute(UserQueries.VerifySignup, [email]);
 };
 
-export default { getUser, getUserById, deleteUser, createUser, updateUser, verifySignup };
+export const updatePassword = (newPwd: any, email: any) => {
+  return execute(UserQueries.UpdatePassword, [newPwd, email]);
+};
+
+export default {
+  getUser,
+  getUserById,
+  getUserByEmail,
+  deleteUser,
+  createUser,
+  updateUser,
+  verifySignup,
+  updatePassword,
+};
