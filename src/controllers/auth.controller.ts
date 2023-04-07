@@ -32,9 +32,40 @@ type signUpUser = {
   country: string;
 };
 
+// Google 
+
+export const googleSignin:RequestHandler = async (req: Request, res: Response) => {
+  try {
+    let token = req.body.token;
+    console.log(token);
+  
+    // Google Auth
+    const {OAuth2Client} = require('google-auth-library');
+    const CLIENT_ID = process.env.CLIENT_ID;
+    const client = new OAuth2Client(CLIENT_ID);
+  
+    async function verify() {
+      const ticket = await client.verifyIdToken({
+          idToken: token,
+          audience: CLIENT_ID, 
+      });
+      const payload = ticket.getPayload();
+      const userid = payload['sub'];
+      console.log(payload);
+    }
+  
+    verify().then(() => {
+  
+    }).catch(console.error);
+  } catch (error) {
+
+  }
+}
+
 export const signin: RequestHandler = async (req: Request, res: Response) => {
   try {
-    const { email, password }: signinUser = req.body;
+
+ const { email, password }: signinUser = req.body;
     if (!email || !password) {
       return res.status(400).json({
         message: 'Email or Password not present',
@@ -60,7 +91,7 @@ export const signin: RequestHandler = async (req: Request, res: Response) => {
       } else {
         res.status(401).json({ message: 'Invalid email or password' });
       }
-    });
+    }); 
   } catch (error) {
     console.error('[auth][signin][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
     res.status(500).json({

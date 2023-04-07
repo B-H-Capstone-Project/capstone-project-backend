@@ -1,6 +1,7 @@
 import express from 'express';
 import { body } from 'express-validator';
 import * as authController from '../controllers/auth.controller';
+import * as userController from '../controllers/user.controller';
 import { isAuth } from '../middleware/auth.middleware';
 
 const router = express.Router();
@@ -34,6 +35,7 @@ const reservationValidateCredential = [
 ]
 */
 router.post('/signin', signInValidateCredential, authController.signin);
+router.post('/signin/google', signInValidateCredential, authController.googleSignin);
 
 router.post('/signup', signUpValidateCredential, authController.signUp);
 
@@ -42,5 +44,6 @@ router.post('/signup', signUpValidateCredential, authController.signUp);
 router.get('/me', isAuth, authController.me);
 
 router.get('/verify/:token', authController.verifyUser);
+
 
 export default router;
