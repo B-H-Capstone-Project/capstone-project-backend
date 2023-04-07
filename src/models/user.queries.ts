@@ -14,4 +14,9 @@ export const UserQueries = {
 
   // Update
   UpdateUser: "UPDATE user SET password = ?, first_name = ?, last_name = ?, phone_number = ?, address_line1 = ?, address_line2 = ?, city = ?, province = ?, postal_code = ?, country = ?, role = ?, is_active = ? WHERE id = ?",
+
+  //Google User
+  NewGoogleUser: "INSERT INTO user (`email`, `first_name`, `last_name`, `password`, `phone_number`, `address_line1`, `address_line2`, `city`, `province`, `postal_code`, `country`, `profile`, `is_verified`) VALUES(?)"
 };
+
+

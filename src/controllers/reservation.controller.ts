@@ -44,7 +44,7 @@ import RowDataPacket from 'mysql2/typings/mysql/lib/protocol/packets/RowDataPack
 
 export const createReservations: RequestHandler = async (req: Request, res: Response) => {
   try {
-   //console.log("req.body: " + JSON.stringify(req.body));
+   console.log("req.body: " + JSON.stringify(req.body));
     //console.log(req.body.date);
     const email = req.body.data.user.email;
     var firstName = req.body.first_name;
@@ -56,8 +56,6 @@ export const createReservations: RequestHandler = async (req: Request, res: Resp
     var prov = req.body.province;
     var city = req.body.city;
     var country = req.body.country;
-
-    console.log(firstName);
     
 
     if(firstName == null){
@@ -97,20 +95,6 @@ export const createReservations: RequestHandler = async (req: Request, res: Resp
     if (!userServer) {
       return res.status(401).json({ message: 'There is no account with that email'});
     }
-
-    const userValues = [
-      userServer.password,
-      firstName,
-      lastName,
-      phoneNum,
-      add1,
-      add2,
-      city,
-      prov,
-      postalCode,
-      country
-    ]
-    await updateUser(userValues, userServer.id);
 
     const resValues = [
       userServer.id,

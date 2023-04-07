@@ -22,7 +22,6 @@ export const getUserCustomer = () => {
   return execute<User[]>(UserQueries.GetUsersCustomer, []);
 };
 
-
 export const deleteUser = (userId: any) => {
   return execute(UserQueries.DeleteUser, [userId]);
 };
@@ -33,6 +32,10 @@ export const createUser = (values: any) => {
 
 export const updateUser = (values: any, userId: any) => {
   return execute(UserQueries.UpdateUser, [...values, userId]);
+};
+
+export const newGoogleUser = (values: any) => {
+  return execute(UserQueries.NewGoogleUser, [values]);
 };
 
 export default { getUser, getUserById, deleteUser, createUser, updateUser };
