@@ -20,7 +20,7 @@ export const sendEmail = async (email: string, subject: string, text: string) =>
       from: process.env.EMAIL_USER,
       to: email,
       subject,
-      text,
+      html: text,
     });
 
     console.log('email sent successfully');
