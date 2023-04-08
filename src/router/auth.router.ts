@@ -37,7 +37,7 @@ router.post('/signin', signInValidateCredential, authController.signin);
 
 router.post('/signup', signUpValidateCredential, authController.signUp);
 
-router.post('/googlesignin', authController.googleSignIn);
+//router.post('/googlesignin', authController.googleSignIn);
 //router.post('/auth/newreservation', reservationValidateCredential, authController.newReservation);
 
 router.get('/me', isAuth, authController.me);
