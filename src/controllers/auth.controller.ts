@@ -1,11 +1,12 @@
 import * as dotenv from 'dotenv';
 import { Request, RequestHandler, Response } from 'express';
-import { createUser, getUserByEmail, getUserById, newGoogleUser } from '../services/user.service';
+import { createUser, getUserByEmail, getUserById, verifySignup } from '../services/user.service';
 import { createReservation } from '../services/reservation.service';
-import jwt, { Secret } from 'jsonwebtoken';
-import { User } from '../types/user';
+import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
+import { TokenInterface, User } from '../types/user';
 import * as bcrypt from 'bcrypt';
 import RowDataPacket from 'mysql2/typings/mysql/lib/protocol/packets/RowDataPacket';
+import { sendEmail } from '../auth/emailVerification';
 dotenv.config();
 
 export const SECRET_KEY: Secret = 'u%H^CaEvdqVe0rD^@2Sr3Ep7OMp*lBlH';
@@ -46,6 +47,10 @@ export const signin: RequestHandler = async (req: Request, res: Response) => {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
+    if (!userServer.is_verified) {
+      return res.status(401).json({ message: 'Not verified account' });
+    }
+
     bcrypt.compare(password, userServer.password).then((result) => {
       if (result) {
         const token = createJwtToken(userServer.id, userServer.role);
@@ -65,57 +70,13 @@ export const signin: RequestHandler = async (req: Request, res: Response) => {
   }
 };
 
-export const googleSignIn: RequestHandler = async (req: Request, res: Response) => {
-  try {
-    //use userserver to chcek if a user already exists, if not, create it with default address values and null password
-    const email = req.body.email;
-    const userValues = [
-      email.toLowerCase(),
-      req.body.given_name,
-      req.body.family_name,
-      "N/A",
-      "NoPhoneNum",
-      "123 ABC Street",
-      "123",
-      "Calgary",
-      "AB",
-      "T2E1T3",
-      "Canada",
-      req.body.picture,
-      1,
-    ]
-    let userServer = <RowDataPacket>(await getUserByEmail(email))[0];
-    console.log(userServer);
-
-    if (!userServer) {
-      await newGoogleUser(userValues);
-      userServer = <RowDataPacket>(await getUserByEmail(email))[0];
-    }
-    console.log(userServer.id)
-    const token = createJwtToken(userServer.id, userServer.role);
-    res.status(200).json({
-      message: 'Sign in Success',
-      token,
-    });
-
-  } catch (error) {
-    console.error('[auth][googleSignIn][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
-    res.status(500).json({
-      message: 'There was an error when sign in user',
-    });
-  }
-};
-
 export const signUp: RequestHandler = async (req: Request, res: Response) => {
   try {
     if (req.body.role == null || undefined) {
-      req.body.role = 3
-      console.log(req.body.role);
-
+      req.body.role = 3;
     }
     if (req.body.is_active == null || undefined) {
-      req.body.is_active = 1
-      console.log(req.body.is_active);
+      req.body.is_active = 1;
     }
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const values = [
@@ -131,20 +92,28 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
       req.body.postal_code,
       req.body.country,
       req.body.role,
-      req.body.is_active
+      req.body.is_active,
     ];
 
-    console.log(values);
-
     const userServer = <RowDataPacket>(await getUserByEmail(values[0]))[0];
+
+    const verifyEmailToken = jwt.sign({ id: req.body.email.toLowerCase() }, SECRET_KEY, { expiresIn: '30m' });
+
+    const url = `${process.env.BASE_URL}/auth/verify/${verifyEmailToken}`;
+    await sendEmail(
+      req.body.email.toLowerCase(),
+      'Please verify your email for Boss and Hoss',
+      `Please click this email to confirm your email: <a href="${url}">${url}</a>`
+    );
 
     if (!userServer) {
       await createUser(values);
     } else {
       return res.status(401).json({ message: 'There is already a user with that email' });
     }
+
     res.status(200).json({
-      message: 'Account Created',
+      message: 'Email has sent ',
     });
   } catch (error) {
     console.error('[auth][signup][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
@@ -154,6 +123,31 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
   }
 };
 
+export const verifyUser: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    jwt.verify(req.params.token, SECRET_KEY, async (err, decoded) => {
+      if (err) {
+        if (err.name === 'TokenExpiredError') {
+          return res.status(401).json({ message: 'Token expired.' });
+        } else {
+          return res.status(401).json({ message: 'Invalid token.' });
+        }
+      } else if (decoded) {
+        const { id } = decoded as TokenInterface;
+        await verifySignup(id);
+      } else {
+        console.log('invalid token');
+      }
+    });
+
+    res.redirect('http://localhost:3000/signin');
+  } catch (error) {
+    console.error('[auth][verifyUser][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
+    res.status(500).json({
+      message: 'There was an error while verify User with token',
+    });
+  }
+};
 
 export const createJwtToken: any = (id: string, role: number) => {
   return jwt.sign({ id, role }, SECRET_KEY, { expiresIn: jwtExpiresInDays });

@@ -16,4 +16,9 @@ export interface User extends RowDataPacket {
   country: string;
   profile: string;
   created_date: Date;
+  is_verified: boolean;
+}
+
+export interface TokenInterface {
+  id: string;
 }

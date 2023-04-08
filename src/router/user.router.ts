@@ -19,10 +19,23 @@ router.get('/users/employee', userController.getUsersEmployee);
 // Get Users - Customer - Role=3
 router.get('/users/customer', userController.getUsersCustomer);
 
+// Get New Employees - week & %
+router.get('/users/newemployee', userController.getNewEmployees);
+router.get('/users/newemployee/percentage', userController.getNewEmployeesPercentage);
+
+// Get New Customers - week & %
+router.get('/users/newcustomer', userController.getNewCustomers);
+router.get('/users/newcustomer/percentage', userController.getNewCustomersPercentage);
+
 // Update User
 router.put('/user/:id', userController.updateUsers);
 
 // Delete User by Id
 router.delete('/user/:id', userController.deleteUsers);
+
+// ask email for reset password
+router.post('/reset-password', userController.requestResetPassword);
+
+router.post('/reset-password/:token', userController.resetPassword);
 
 export default router;

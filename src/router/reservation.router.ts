@@ -27,7 +27,17 @@ router.delete('/reservation/:id', reservationController.deleteReservation);
 
 // Get All Reservation (admin side)
 router.get('/reservations', reservationController.getReservations);
-
 router.get('/reservationsUsers', reservationUserController.getReservationsUsers);
+
+// Get New / Pending Reservations - week
+router.get('/newreservations', reservationController.getNewReservations);
+router.get('/newpendingreservations', reservationController.getNewPendingReservations)
+
+// Get New / Pending Reservations %
+router.get('/newreservations/percentage', reservationController.getNewReservationsPercentage)
+router.get('/newpendingreservations/percentage', reservationController.getNewPendingReservationsPercentage)
+
+// Get Only Address
+router.get('/reservations/address', reservationController.getReservationAddress)
 
 export default router;
