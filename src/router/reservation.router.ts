@@ -40,4 +40,7 @@ router.get('/newpendingreservations/percentage', reservationController.getNewPen
 // Get Only Address
 router.get('/reservations/address', reservationController.getReservationAddress)
 
+// Get Reservation for Google Maps
+router.get('/reservations/map', reservationController.getReservationMap)
+
 export default router;

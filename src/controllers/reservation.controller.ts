@@ -292,7 +292,6 @@ export const getNewPendingReservationsPercentage: RequestHandler = async (req: R
 
 export const getReservationAddress: RequestHandler = async (req: Request, res: Response) => {
   try {
-
     const addresses: any = await reservationService.getReservationAddress();
 
     const newAddresses = addresses.map((address: any) => (
@@ -309,6 +308,32 @@ export const getReservationAddress: RequestHandler = async (req: Request, res: R
     );
     res.status(500).json({
       message: 'There was an error when fetching reservationAddress',
+    });
+  }
+};
+
+export const getReservationMap: RequestHandler = async (req: Request, res: Response) => {
+  try {
+
+    const reservations: any = await reservationService.getReservationMap();
+    // console.log("getReservationMap: " + JSON.stringify(reservations));
+    // console.log("--------------------------------------------------");
+    const newAddresses = reservations.map((address: any) => (
+      `${address.address_line1}, ${address.city}, ${address.province} ${address.postal_code}, ${address.country}`
+    ));
+
+    // console.log("newAddresses after map: " + newAddresses);
+    // console.log("--------------------------------------------------");
+    res.status(200).json({
+      newAddresses,reservations
+    });
+  } catch (error) {
+    console.error(
+      '[reservation.controller][getReservationMap][Error] ',
+      typeof error === 'object' ? JSON.stringify(error) : error
+    );
+    res.status(500).json({
+      message: 'There was an error when fetching getReservationMap',
     });
   }
 };

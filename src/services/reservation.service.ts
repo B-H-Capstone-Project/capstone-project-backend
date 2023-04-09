@@ -47,4 +47,9 @@ export const getReservationAddress = () => {
   return execute(ReservationQueries.GetReservationAddress, []);
 };
 
+// Get Reservation's data for Google map 
+export const getReservationMap = () => {
+  return execute(ReservationQueries.GetReservationMap, []);
+};
+
 export default { getReservationById, deleteReservation, createReservation, updateReservation, getReservationByUser, getReservations, getNewReservation, getNewPendingReservation, getNewReservationPercentage, getNewPendingReservationPercentage, getReservationAddress};
