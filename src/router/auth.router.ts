@@ -35,7 +35,9 @@ const reservationValidateCredential = [
 ]
 */
 router.post('/signin', signInValidateCredential, authController.signin);
-router.post('/signin/google', signInValidateCredential, authController.googleSignin);
+
+//Google
+//router.post('/signin/google', signInValidateCredential, authController.googleSignin);
 
 router.post('/signup', signUpValidateCredential, authController.signUp);
 

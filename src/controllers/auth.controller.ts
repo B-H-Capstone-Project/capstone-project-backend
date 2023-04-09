@@ -32,7 +32,7 @@ type signUpUser = {
   country: string;
 };
 
-// Google 
+/* // Google 
 
 export const googleSignin:RequestHandler = async (req: Request, res: Response) => {
   try {
@@ -60,7 +60,7 @@ export const googleSignin:RequestHandler = async (req: Request, res: Response) =
   } catch (error) {
 
   }
-}
+} */
 
 export const signin: RequestHandler = async (req: Request, res: Response) => {
   try {
