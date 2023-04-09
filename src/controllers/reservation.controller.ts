@@ -136,8 +136,6 @@ export const updateReservation: RequestHandler = async (req: Request, res: Respo
       reservationInputData.country,
     ];
 
-    console.log(reservation_id);
-
     const reservation = await reservationService.updateReservation(values, reservation_id);
     res.status(200).json({
       reservation,
@@ -202,6 +200,7 @@ export const createReservationAdmin: RequestHandler = async (req: Request, res: 
       reservationInputData.city,
       reservationInputData.province,
       reservationInputData.postal_code,
+      reservationInputData.country,
     ];
 
     const reservation = await reservationService.createReservation(values);
@@ -293,12 +292,12 @@ export const getNewPendingReservationsPercentage: RequestHandler = async (req: R
 
 export const getReservationAddress: RequestHandler = async (req: Request, res: Response) => {
   try {
-
     const addresses: any = await reservationService.getReservationAddress();
 
-    const newAddresses = addresses.map((address: any) => (
-      `${address.address_line1}, ${address.city}, ${address.province} ${address.postal_code}, ${address.country}`
-    ));
+    const newAddresses = addresses.map(
+      (address: any) =>
+        `${address.address_line1}, ${address.city}, ${address.province} ${address.postal_code}, ${address.country}`
+    );
 
     res.status(200).json({
       newAddresses,
