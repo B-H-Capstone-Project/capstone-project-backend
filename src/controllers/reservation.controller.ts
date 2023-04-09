@@ -124,7 +124,7 @@ export const updateReservation: RequestHandler = async (req: Request, res: Respo
     const reservation_id = req.params.id;
 
     const values = [
-      req.params.id,
+      reservationInputData.user_id,
       reservationInputData.type,
       new Date(reservationInputData.date),
       reservationInputData.description,
@@ -133,9 +133,8 @@ export const updateReservation: RequestHandler = async (req: Request, res: Respo
       reservationInputData.city,
       reservationInputData.province,
       reservationInputData.postal_code,
+      reservationInputData.country,
     ];
-    // const values = [req.body.user_id, req.body.type, req.body.date, req.body.description];
-    console.log(req.body);
 
     const reservation = await reservationService.updateReservation(values, reservation_id);
     res.status(200).json({
@@ -201,6 +200,7 @@ export const createReservationAdmin: RequestHandler = async (req: Request, res: 
       reservationInputData.city,
       reservationInputData.province,
       reservationInputData.postal_code,
+      reservationInputData.country,
     ];
 
     const reservation = await reservationService.createReservation(values);
@@ -294,9 +294,10 @@ export const getReservationAddress: RequestHandler = async (req: Request, res: R
   try {
     const addresses: any = await reservationService.getReservationAddress();
 
-    const newAddresses = addresses.map((address: any) => (
-      `${address.address_line1}, ${address.city}, ${address.province} ${address.postal_code}, ${address.country}`
-    ));
+    const newAddresses = addresses.map(
+      (address: any) =>
+        `${address.address_line1}, ${address.city}, ${address.province} ${address.postal_code}, ${address.country}`
+    );
 
     res.status(200).json({
       newAddresses,
