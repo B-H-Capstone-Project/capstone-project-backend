@@ -47,6 +47,11 @@ export const getReservationAddress = () => {
   return execute(ReservationQueries.GetReservationAddress, []);
 };
 
+//Create Reservation in admin side
+export const createReservationAdmin = (values: any) => {
+  return execute<Reservation>(ReservationQueries.CreateReservationAdmin, [values]);
+};
+
 // Confirm Reservation
 export const confirmReservation = (confirmFlag: any, reservationId: any) => {
   return execute(ReservationQueries.UpdateReservationStatus, [confirmFlag, reservationId]);
@@ -65,4 +70,5 @@ export default {
   getNewPendingReservationPercentage,
   getReservationAddress,
   confirmReservation,
+  createReservationAdmin,
 };

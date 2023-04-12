@@ -21,4 +21,6 @@ export const ReservationQueries = {
   GetReservationAddress: `SELECT address_line1, city, province, postal_code, country FROM reservation;`,
 
   UpdateReservationStatus: 'UPDATE reservation SET is_confirmed = ? WHERE id = ?',
+  CreateReservationAdmin:
+    'INSERT INTO reservation (`user_id`, `type`, `date`, `description`, `address_line1`, `address_line2`, `city`, `province`, `postal_code`, `country`, `is_confirmed`) VALUES (?)',
 };

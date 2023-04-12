@@ -201,9 +201,10 @@ export const createReservationAdmin: RequestHandler = async (req: Request, res: 
       reservationInputData.province,
       reservationInputData.postal_code,
       reservationInputData.country,
+      2,
     ];
 
-    const reservation = await reservationService.createReservation(values);
+    const reservation = await reservationService.createReservationAdmin(values);
     res.status(200).json({
       reservation,
     });
