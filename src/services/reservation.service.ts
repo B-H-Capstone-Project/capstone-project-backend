@@ -47,4 +47,22 @@ export const getReservationAddress = () => {
   return execute(ReservationQueries.GetReservationAddress, []);
 };
 
-export default { getReservationById, deleteReservation, createReservation, updateReservation, getReservationByUser, getReservations, getNewReservation, getNewPendingReservation, getNewReservationPercentage, getNewPendingReservationPercentage, getReservationAddress};
+// Confirm Reservation
+export const confirmReservation = (confirmFlag: any, reservationId: any) => {
+  return execute(ReservationQueries.UpdateReservationStatus, [confirmFlag, reservationId]);
+};
+
+export default {
+  getReservationById,
+  deleteReservation,
+  createReservation,
+  updateReservation,
+  getReservationByUser,
+  getReservations,
+  getNewReservation,
+  getNewPendingReservation,
+  getNewReservationPercentage,
+  getNewPendingReservationPercentage,
+  getReservationAddress,
+  confirmReservation,
+};

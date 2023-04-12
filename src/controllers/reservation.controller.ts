@@ -312,3 +312,24 @@ export const getReservationAddress: RequestHandler = async (req: Request, res: R
     });
   }
 };
+
+export const confirmReservation: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    const reservation_id = req.params.id;
+    const confirmFlag = req.body.is_confirmed;
+
+    const reservation = await reservationService.confirmReservation(confirmFlag, reservation_id);
+
+    res.status(200).json({
+      reservation,
+    });
+  } catch (error) {
+    console.error(
+      '[reservation.controller][confirmReservation][Error] ',
+      typeof error === 'object' ? JSON.stringify(error) : error
+    );
+    res.status(500).json({
+      message: 'There was an error when confirming reservation',
+    });
+  }
+};
