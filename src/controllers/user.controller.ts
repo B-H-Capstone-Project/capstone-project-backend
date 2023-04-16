@@ -210,17 +210,22 @@ export const requestResetPassword: RequestHandler = async (req: Request, res: Re
     const randomPassword = generatePassword();
     const hashedPassword = await bcrypt.hash(randomPassword, 10);
     const update = await updatePassword(hashedPassword, email);
-
-    await sendEmail(
+    console.log(email);
+    const result = await sendEmail(
       email,
       'Boss and Hoss: Reset your password',
       `Temporary password: ${randomPassword}`,
-    );
+    ); 
 
-    res.status(200).json({
-      message: 'Reset email has sent ',
-    });
-
+    if (result) {
+      res.status(200).json({
+        message: 'Reset email has sent ',
+      });
+    } else {
+      res.status(500).json({
+        message: 'email not sent',
+      });
+    }
   } catch (error) {
     res.status(500).json({
       message: 'There was an error when ask email for resetting password',
