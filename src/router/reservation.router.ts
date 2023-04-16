@@ -8,8 +8,8 @@ const router = express.Router();
 const reservationValidateCredential = [body('type').notEmpty()];
 // Reservation
 // Create reservation
-router.post('/reservation/:id', reservationController.createReservationAdmin);
-router.post('/reservation/newreservation', reservationValidateCredential, reservationController.createReservations);
+router.post('/reservation/:id', reservationController.createReservations);
+router.post('/reservation/admin/:id', reservationValidateCredential, reservationController.createReservationAdmin);
 
 // Get Reservation By User Id
 router.get('/reservation/user/:id', reservationController.getReservationsByUser);
