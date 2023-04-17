@@ -42,4 +42,7 @@ router.get('/reservations/address', reservationController.getReservationAddress)
 router.put('/confirmreservation/:id', reservationController.confirmReservation);
 
 
+// Get Reservation for Google Maps
+router.get('/reservations/map', reservationController.getReservationMap)
+
 export default router;

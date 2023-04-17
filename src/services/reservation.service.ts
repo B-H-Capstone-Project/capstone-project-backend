@@ -47,6 +47,11 @@ export const getReservationAddress = () => {
   return execute(ReservationQueries.GetReservationAddress, []);
 };
 
+// Get Reservation's data for Google map 
+export const getReservationMap = () => {
+  return execute(ReservationQueries.GetReservationMap, []);
+};
+
 //Create Reservation in admin side
 export const createReservationAdmin = (values: any) => {
   return execute<Reservation>(ReservationQueries.CreateReservationAdmin, [values]);
@@ -69,6 +74,7 @@ export default {
   getNewReservationPercentage,
   getNewPendingReservationPercentage,
   getReservationAddress,
+  getReservationMap,
   confirmReservation,
   createReservationAdmin,
 };
