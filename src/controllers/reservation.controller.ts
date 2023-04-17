@@ -317,14 +317,10 @@ export const getReservationMap: RequestHandler = async (req: Request, res: Respo
   try {
 
     const reservations: any = await reservationService.getReservationMap();
-    // console.log("getReservationMap: " + JSON.stringify(reservations));
-    // console.log("--------------------------------------------------");
     const newAddresses = reservations.map((address: any) => (
       `${address.address_line1}, ${address.city}, ${address.province} ${address.postal_code}, ${address.country}`
     ));
 
-    // console.log("newAddresses after map: " + newAddresses);
-    // console.log("--------------------------------------------------");
     res.status(200).json({
       newAddresses,reservations
     });
