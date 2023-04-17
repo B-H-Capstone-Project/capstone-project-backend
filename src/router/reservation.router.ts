@@ -5,13 +5,11 @@ import * as reservationUserController from '../controllers/reservationUser.contr
 
 const router = express.Router();
 
-const reservationValidateCredential = [
-    body('type').notEmpty(),
-  ]
+const reservationValidateCredential = [body('type').notEmpty()];
 // Reservation
 // Create reservation
-router.post('/reservation/:id', reservationController.createReservationAdmin);
-router.post('/reservation/newreservation', reservationValidateCredential, reservationController.createReservations);
+router.post('/reservation/:id', reservationController.createReservations);
+router.post('/reservation/admin/:id', reservationValidateCredential, reservationController.createReservationAdmin);
 
 // Get Reservation By User Id
 router.get('/reservation/user/:id', reservationController.getReservationsByUser);
@@ -31,14 +29,17 @@ router.get('/reservationsUsers', reservationUserController.getReservationsUsers)
 
 // Get New / Pending Reservations - week
 router.get('/newreservations', reservationController.getNewReservations);
-router.get('/newpendingreservations', reservationController.getNewPendingReservations)
+router.get('/newpendingreservations', reservationController.getNewPendingReservations);
 
 // Get New / Pending Reservations %
-router.get('/newreservations/percentage', reservationController.getNewReservationsPercentage)
-router.get('/newpendingreservations/percentage', reservationController.getNewPendingReservationsPercentage)
+router.get('/newreservations/percentage', reservationController.getNewReservationsPercentage);
+router.get('/newpendingreservations/percentage', reservationController.getNewPendingReservationsPercentage);
 
 // Get Only Address
-router.get('/reservations/address', reservationController.getReservationAddress)
+router.get('/reservations/address', reservationController.getReservationAddress);
+
+// Confirm reservation
+router.put('/confirmreservation/:id', reservationController.confirmReservation);
 
 
 export default router;
