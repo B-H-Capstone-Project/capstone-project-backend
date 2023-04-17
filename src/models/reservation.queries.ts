@@ -1,6 +1,6 @@
 export const ReservationQueries = {
   CreateReservation:
-    'INSERT INTO reservation (`user_id`, `type`, `date`, `description`, `address_line1`, `address_line2`, `city`, `province`, `postal_code`, `country`) VALUES (?)',
+    'INSERT INTO reservation (`user_id`, `type`, `date`, `description`, `address_line1`, `address_line2`, `city`, `province`, `postal_code`, `country`, `files`) VALUES (?)',
   DeleteReservation: 'DELETE FROM reservation WHERE id = ?',
   GetReservationById: 'SELECT * FROM reservation WHERE id = ?',
   UpdateReservation:

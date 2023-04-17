@@ -14,6 +14,7 @@ export interface Reservation extends RowDataPacket {
   description: string;
   is_confirmed: boolean;
   created_date: Date;
+  files: string;
 }
 
 export interface IReservationInput {
@@ -27,4 +28,5 @@ export interface IReservationInput {
   province: string;
   country: string;
   city: string;
+  files: string;
 }
