@@ -64,8 +64,7 @@ export const googleSignin:RequestHandler = async (req: Request, res: Response) =
 
 export const signin: RequestHandler = async (req: Request, res: Response) => {
   try {
-
- const { email, password }: signinUser = req.body;
+    const { email, password }: signinUser = req.body;
     if (!email || !password) {
       return res.status(400).json({
         message: 'Email or Password not present',
@@ -91,7 +90,7 @@ export const signin: RequestHandler = async (req: Request, res: Response) => {
       } else {
         res.status(401).json({ message: 'Invalid email or password' });
       }
-    }); 
+    });
   } catch (error) {
     console.error('[auth][signin][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
     res.status(500).json({

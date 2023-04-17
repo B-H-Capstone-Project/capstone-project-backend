@@ -144,6 +144,7 @@ export const getReservations: RequestHandler = async (req: Request, res: Respons
 export const createReservationAdmin: RequestHandler = async (req: Request, res: Response) => {
   try {
     const reservationInputData: IReservationInput = req.body;
+    console.log(reservationInputData);
     const values = [
       req.params.id,
       reservationInputData.type,
@@ -155,7 +156,7 @@ export const createReservationAdmin: RequestHandler = async (req: Request, res: 
       reservationInputData.province,
       reservationInputData.postal_code,
       reservationInputData.country,
-      2,
+      reservationInputData.files,
     ];
 
     const reservation = await reservationService.createReservationAdmin(values);
