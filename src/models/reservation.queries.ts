@@ -1,6 +1,6 @@
 export const ReservationQueries = {
   CreateReservation:
-    'INSERT INTO reservation (`user_id`, `type`, `date`, `description`, `address_line1`, `address_line2`, `city`, `province`, `postal_code`, `country`) VALUES (?)',
+    'INSERT INTO reservation (`user_id`, `type`, `date`, `description`, `address_line1`, `address_line2`, `city`, `province`, `postal_code`, `country`, `files`) VALUES (?)',
   DeleteReservation: 'DELETE FROM reservation WHERE id = ?',
   GetReservationById: 'SELECT * FROM reservation WHERE id = ?',
   UpdateReservation:
@@ -10,7 +10,8 @@ export const ReservationQueries = {
 
   // Get New / Pending Reservation data (week)
   GetNewReservations: 'SELECT * FROM reservation WHERE created_date >= DATE_SUB(NOW(), INTERVAL 1 WEEK);',
-  GetNewPendingReservations: 'SELECT * FROM reservation WHERE created_date >= DATE_SUB(NOW(), INTERVAL 1 WEEK) AND is_confirmed = 1;',
+  GetNewPendingReservations:
+    'SELECT * FROM reservation WHERE created_date >= DATE_SUB(NOW(), INTERVAL 1 WEEK) AND is_confirmed = 1;',
 
   // Get Percentage (current week - last week)
   GetNewReservationsPercentage: `SELECT CONCAT(ROUND(((COUNT(CASE WHEN WEEK(created_date) = WEEK(NOW()) THEN 1 ELSE NULL END) - COUNT(CASE WHEN WEEK(created_date) = WEEK(NOW()) - 1 THEN 1 ELSE NULL END)) / COUNT(CASE WHEN WEEK(created_date) = WEEK(NOW()) - 1 THEN 1 ELSE NULL END)) * 100), '%') AS increase_percentage FROM reservation WHERE WEEK(created_date) >= WEEK(NOW()) - 1;`,
@@ -24,5 +25,9 @@ export const ReservationQueries = {
   FROM reservation
   JOIN user
   ON reservation.user_id = user.id
-  WHERE is_confirmed = 2;`
+  WHERE is_confirmed = 2;`,
+  
+  UpdateReservationStatus: 'UPDATE reservation SET is_confirmed = ? WHERE id = ?',
+  CreateReservationAdmin:
+    'INSERT INTO reservation (`user_id`, `type`, `date`, `description`, `address_line1`, `address_line2`, `city`, `province`, `postal_code`, `country`, `is_confirmed`) VALUES (?)',
 };

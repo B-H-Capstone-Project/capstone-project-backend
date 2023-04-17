@@ -206,34 +206,42 @@ export const updateUsers: RequestHandler = async (req: Request, res: Response) =
 export const requestResetPassword: RequestHandler = async (req: Request, res: Response) => {
   try {
     const email = req.body.email;
-    const user = <RowDataPacket>(await getUserByEmail(email))[0];
 
-    if (!user) {
-      return res.status(401).json({ message: 'Invalid email or password' });
-    }
-    const resetPwdToken = jwt.sign({ id: email }, SECRET_KEY, { expiresIn: '30m' });
-
-    const url = `http://localhost:3000/reset-password/${resetPwdToken}`;
-
-    await sendEmail(
-      user.email,
+    const randomPassword = generatePassword();
+    const hashedPassword = await bcrypt.hash(randomPassword, 10);
+    const update = await updatePassword(hashedPassword, email);
+    console.log(email);
+    const result = await sendEmail(
+      email,
       'Boss and Hoss: Reset your password',
-      `Please click this email to Reset your email: <a href="${url}">${url}</a>`
-    );
+      `Temporary password: ${randomPassword}`,
+    ); 
 
-    res.status(200).json({
-      message: 'Reset email has sent ',
-    });
+    if (result) {
+      res.status(200).json({
+        message: 'Reset email has sent ',
+      });
+    } else {
+      res.status(500).json({
+        message: 'email not sent',
+      });
+    }
   } catch (error) {
-    console.error(
-      '[user.controller][requestResetPassword][Error] ',
-      typeof error === 'object' ? JSON.stringify(error) : error
-    );
     res.status(500).json({
       message: 'There was an error when ask email for resetting password',
     });
   }
 };
+
+function generatePassword() {
+  let length = 10,
+      charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+      retVal = "";
+  for (let i = 0, n = charset.length; i < length; ++i) {
+      retVal += charset.charAt(Math.floor(Math.random() * n));
+  }
+  return retVal;
+}
 
 export const resetPassword: RequestHandler = async (req: Request, res: Response, next) => {
   try {
