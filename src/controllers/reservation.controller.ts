@@ -5,12 +5,28 @@ import { createReservation } from '../services/reservation.service';
 import { getUserByEmail, updateUser } from '../services/user.service';
 import RowDataPacket from 'mysql2/typings/mysql/lib/protocol/packets/RowDataPacket';
 
+const convertType = (type: string) => {
+  switch (type) {
+    case 'residential':
+      return 'Residential';
+    case 'commercial':
+      return 'Commercial';
+    case 'service':
+      return 'Service';
+    case 'outdoorLighting':
+      return 'Outdoor Lighting';
+    default:
+      break;
+  }
+};
+
 export const createReservations: RequestHandler = async (req: Request, res: Response) => {
   try {
     const reservationInputData: IReservationInput = req.body;
+
     const values = [
       req.params.id,
-      reservationInputData.type,
+      convertType(reservationInputData.type),
       new Date(reservationInputData.date),
       reservationInputData.description,
       reservationInputData.address_line1,

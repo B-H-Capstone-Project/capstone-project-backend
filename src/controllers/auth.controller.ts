@@ -132,7 +132,7 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
     await sendEmail(
       req.body.email.toLowerCase(),
       'Please verify your email for Boss and Hoss',
-      `Please click this email to confirm your email: <a href="${url}">${url}</a>`
+      `<p>Please click <a href="${url}">here</a> to verify your account</p>`
     );
 
     if (!userServer) {
